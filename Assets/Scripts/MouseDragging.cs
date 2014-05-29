@@ -17,7 +17,6 @@ public class MouseDragging : MonoBehaviour {
 		{
 			if (hit.collider.gameObject.tag == "DragHandle")
 			{
-				Debug.Log ("SLDKJFD");
 				Draggable draggable = hit.collider.gameObject.GetComponent<Draggable>();
 
 				draggable.Drag (ray);
