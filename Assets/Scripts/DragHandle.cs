@@ -118,7 +118,7 @@ public class DragHandle : MonoBehaviour {
 					}
 					else if (parentUnit.currentRotationAngle < -maxAngle)
 					{
-						angle -= parentUnit.currentRotationAngle - maxAngle;
+						angle -= parentUnit.currentRotationAngle + maxAngle;
 						parentUnit.currentRotationAngle = -maxAngle;
 					}
 				}
