@@ -9,7 +9,7 @@ public enum DraggableBehavior
 
 public class DragHandle : MonoBehaviour {
 	public DraggableBehavior behavior = DraggableBehavior.Forward;
-	public Unit parentUnit;
+	public UnitMover parentUnitMover;
 
 	public void Drag(Ray ray)
 	{
@@ -17,16 +17,16 @@ public class DragHandle : MonoBehaviour {
 		Plane plane = new Plane(transform.up, transform.position);
 		Vector3 clickPositionOnPlane;
 
-		if (parentUnit.lastDragHandle != this)
+		if (parentUnitMover.lastDragHandle != this)
 		{
-			parentUnit.lastDragHandle = this;
+			parentUnitMover.lastDragHandle = this;
 
-			parentUnit.lastPosition = parentUnit.transform.position;
-			parentUnit.lastRotationAngle = parentUnit.transform.rotation.eulerAngles.y;
-			parentUnit.currentRotationAngle = 0;
+			parentUnitMover.lastPosition = parentUnitMover.transform.position;
+			parentUnitMover.lastRotationAngle = parentUnitMover.transform.rotation.eulerAngles.y;
+			parentUnitMover.currentRotationAngle = 0;
 
-			parentUnit.movementRemaining = parentUnit.movementRemaining - parentUnit.movementUsed;
-			parentUnit.movementUsed = 0;
+			parentUnitMover.movementRemaining = parentUnitMover.movementRemaining - parentUnitMover.movementUsed;
+			parentUnitMover.movementUsed = 0;
 		}
 
 		if (plane.Raycast(ray, out clickDistance))
@@ -40,33 +40,33 @@ public class DragHandle : MonoBehaviour {
 
 				transform.parent.Translate (newOffset, Space.World);
 
-				if (Vector3.Dot (transform.parent.position - parentUnit.lastPosition, parentUnit.transform.forward) < 0)
+				if (Vector3.Dot (transform.parent.position - parentUnitMover.lastPosition, parentUnitMover.transform.forward) < 0)
 				{
-					transform.parent.position = parentUnit.lastPosition;
-					parentUnit.movementUsed = 0;
+					transform.parent.position = parentUnitMover.lastPosition;
+					parentUnitMover.movementUsed = 0;
 				}
 				else
 				{
-					parentUnit.movementUsed = (transform.parent.position - parentUnit.lastPosition).magnitude;
+					parentUnitMover.movementUsed = (transform.parent.position - parentUnitMover.lastPosition).magnitude;
 
-					if (parentUnit.movementUsed > parentUnit.movementRemaining)
+					if (parentUnitMover.movementUsed > parentUnitMover.movementRemaining)
 					{
-						float dif = parentUnit.movementUsed - parentUnit.movementRemaining;
+						float dif = parentUnitMover.movementUsed - parentUnitMover.movementRemaining;
 
-						parentUnit.movementUsed = parentUnit.movementRemaining;
+						parentUnitMover.movementUsed = parentUnitMover.movementRemaining;
 
-						transform.parent.Translate (-dif * transform.parent.transform.forward);
+						transform.parent.Translate (-dif * transform.parent.forward, Space.World);
 					}
 				}
 
 				break;
 
 			case DraggableBehavior.Wheel:
-				float radius = transform.parent.GetComponent<Unit>().Files;
+				float radius = parentUnitMover.parentUnit.Files;
 				Vector3 center;
 				float angle;
 				bool isLeft = transform.localPosition.x < 0;
-				float maxAngle = parentUnit.movementRemaining * Mathf.Rad2Deg / (parentUnit.Files * 0.5f);
+				float maxAngle = parentUnitMover.movementRemaining * Mathf.Rad2Deg / (parentUnitMover.parentUnit.Files * 0.5f);
 
 				if (maxAngle > 180)
 				{
@@ -94,36 +94,36 @@ public class DragHandle : MonoBehaviour {
 					angle = -angle;
 				}
 
-				parentUnit.currentRotationAngle += angle;
+				parentUnitMover.currentRotationAngle += angle;
 
 				if (isLeft)
 				{
-					if (parentUnit.currentRotationAngle < 0)
+					if (parentUnitMover.currentRotationAngle < 0)
 					{
-						angle -= parentUnit.currentRotationAngle;
-						parentUnit.currentRotationAngle = 0;
+						angle -= parentUnitMover.currentRotationAngle;
+						parentUnitMover.currentRotationAngle = 0;
 					}
-					else if (parentUnit.currentRotationAngle > maxAngle)
+					else if (parentUnitMover.currentRotationAngle > maxAngle)
 					{
-						angle -= parentUnit.currentRotationAngle - maxAngle;
-						parentUnit.currentRotationAngle = maxAngle;
+						angle -= parentUnitMover.currentRotationAngle - maxAngle;
+						parentUnitMover.currentRotationAngle = maxAngle;
 					}
 				}
 				else
 				{
-					if (parentUnit.currentRotationAngle > 0)
+					if (parentUnitMover.currentRotationAngle > 0)
 					{
-						angle -= parentUnit.currentRotationAngle;
-						parentUnit.currentRotationAngle = 0;
+						angle -= parentUnitMover.currentRotationAngle;
+						parentUnitMover.currentRotationAngle = 0;
 					}
-					else if (parentUnit.currentRotationAngle < -maxAngle)
+					else if (parentUnitMover.currentRotationAngle < -maxAngle)
 					{
-						angle -= parentUnit.currentRotationAngle + maxAngle;
-						parentUnit.currentRotationAngle = -maxAngle;
+						angle -= parentUnitMover.currentRotationAngle + maxAngle;
+						parentUnitMover.currentRotationAngle = -maxAngle;
 					}
 				}
 
-				parentUnit.movementUsed = parentUnit.Files * Mathf.Deg2Rad * Mathf.Abs (parentUnit.currentRotationAngle) * 0.5f;
+				parentUnitMover.movementUsed = parentUnitMover.parentUnit.Files * Mathf.Deg2Rad * Mathf.Abs (parentUnitMover.currentRotationAngle) * 0.5f;
 
 				transform.parent.RotateAround(center, transform.up, angle);
 				break;

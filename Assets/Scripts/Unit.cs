@@ -2,34 +2,33 @@
 using System.Collections;
 
 public class Unit : MonoBehaviour {
+	public GameObject Model;
 	public int Files = 5;
+	public int Count = 10;
 
 	public float maximumMovement = 5;
-	public float movementRemaining = 5;
-	public float movementUsed = 0;
-	public float currentRotationAngle = 0;
-	public Vector3 lastPosition;
-	public float lastRotationAngle;
-	public DragHandle lastDragHandle;
+
+	public int Ranks
+	{
+		get
+		{
+			return (Count - 1) / Files + 1;
+		}
+	}
 
 	void Start()
 	{
-		Transform leftCornerHandle = transform.FindChild ("LeftCornerHandle");
-		Transform rightCornerHandle = transform.FindChild ("RightCornerHandle");
+		int ranks = Ranks;
 
-		float cornerOffset = Files * 0.5f;
+		for (int row = 0; row < ranks; ++row)
+		{
+			for (int column = 0; column < Files && row*Files + column < Count; ++column)
+			{
+				var obj = Instantiate(Model) as GameObject;
 
-		leftCornerHandle.localPosition = new Vector3(-cornerOffset, 0.25f, 0.0f);
-		rightCornerHandle.localPosition = new Vector3(cornerOffset, 0.25f, 0.0f);
-
-		lastPosition = transform.position;
-		lastRotationAngle = transform.rotation.eulerAngles.y;
-	}
-
-	void Update()
-	{
-		var text = GameObject.FindObjectOfType(typeof(GUIText)) as GUIText;
-
-		text.text = (movementRemaining - movementUsed).ToString();
+				obj.transform.parent = transform;
+				obj.transform.localPosition = new Vector3(column - Files * 0.5f + 0.5f, obj.transform.localPosition.y, -row - 0.5f);
+			}
+		}
 	}
 }

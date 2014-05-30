@@ -2,14 +2,14 @@
 using System.Collections;
 
 public class UnitTray : MonoBehaviour {
+	public UnitMover parentUnitMover;
 
 	// Use this for initialization
 	void Start () {
-		Unit parentUnit = transform.parent.gameObject.GetComponent<Unit>();
+		int files = parentUnitMover.parentUnit.Files;
+		int ranks = parentUnitMover.parentUnit.Ranks;
 
-		int files = parentUnit.Files;
-
-		transform.localScale = new Vector3(files, 0.1f, 1);
+		transform.localScale = new Vector3(files, 0.1f, ranks);
 	}
 	
 	// Update is called once per frame
