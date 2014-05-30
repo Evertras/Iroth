@@ -126,6 +126,7 @@ MonoBehaviour:
   lastPosition: {x: 0, y: 0, z: 0}
   lastRotationAngle: 0
   lastDragHandle: {fileID: 0}
+  currentMovementTrail: {fileID: 0}
 --- !u!1 &194701486
 GameObject:
   m_ObjectHideFlags: 0
@@ -236,6 +237,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 56842948}
+  - {fileID: 594068516}
   m_Father: {fileID: 0}
   m_RootOrder: 3
 --- !u!114 &227470342
@@ -252,6 +254,9 @@ MonoBehaviour:
   Model: {fileID: 100000, guid: dca0b0544b5d08c43ac0c225d67ec93a, type: 2}
   Files: 5
   Count: 10
+  movementTrailStraight: {fileID: 100000, guid: f6eaea00fadf96c449e20f29bf1d0a0f,
+    type: 2}
+  movementTrailCurved: {fileID: 0}
   maximumMovement: 5
 --- !u!1 &581397481
 GameObject:
@@ -292,6 +297,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!1 &594068515
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 594068516}
+  m_Layer: 0
+  m_Name: MovementTrail
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &594068516
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 594068515}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 227470341}
+  m_RootOrder: 1
 --- !u!1 &641515042
 GameObject:
   m_ObjectHideFlags: 0
