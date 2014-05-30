@@ -28,19 +28,22 @@ public class UnitMover : MonoBehaviour {
 	{
 		float cornerOffset = parentUnit.Files * 0.5f;
 
-		movementRemaining = parentUnit.maximumMovement;
-
 		leftCornerHandle.transform.localPosition = new Vector3(-cornerOffset, 0.5f, 0.0f);
 		rightCornerHandle.transform.localPosition = new Vector3(cornerOffset, 0.5f, 0.0f);
 
-		lastPosition = transform.position;
-		lastRotationAngle = transform.rotation.eulerAngles.y;
+		ResetMovement ();
 	}
 
 	void Update()
 	{
-		var text = GameObject.FindObjectOfType(typeof(GUIText)) as GUIText;
+	}
 
-		text.text = (movementRemaining - movementUsed).ToString();
+	public void ResetMovement()
+	{
+		movementUsed = 0;
+		movementRemaining = parentUnit.maximumMovement;
+
+		lastPosition = transform.position;
+		lastRotationAngle = transform.rotation.eulerAngles.y;
 	}
 }

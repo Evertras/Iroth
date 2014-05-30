@@ -17,6 +17,8 @@ public class AdvancePhaseButton : MonoBehaviour {
 
 			unit.transform.rotation = unitMover.transform.rotation;
 			unitMover.transform.localRotation = Quaternion.identity;
+
+			unitMover.ResetMovement();
 		}
 	}
 }

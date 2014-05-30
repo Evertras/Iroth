@@ -3,10 +3,12 @@ using System.Collections;
 
 public class Unit : MonoBehaviour {
 	public GameObject Model;
+
 	public int Files = 5;
 	public int Count = 10;
 
-	public float maximumMovement = 5;
+	[HideInInspector]
+	public float maximumMovement;
 
 	public int Ranks
 	{
@@ -16,9 +18,11 @@ public class Unit : MonoBehaviour {
 		}
 	}
 
-	void Start()
+	void Awake()
 	{
 		int ranks = Ranks;
+
+		maximumMovement = Model.GetComponent<ModelStats> ().movement * 5;
 
 		for (int row = 0; row < ranks; ++row)
 		{

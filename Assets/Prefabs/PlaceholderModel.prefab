@@ -11,7 +11,8 @@ GameObject:
   - 33: {fileID: 3300000}
   - 136: {fileID: 13600000}
   - 23: {fileID: 2300000}
-  m_Layer: 0
+  - 114: {fileID: 11400000}
+  m_Layer: 2
   m_Name: PlaceholderModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -57,6 +58,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27d88a0b1c179154492bafe304058273, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movement: 2
 --- !u!136 &13600000
 CapsuleCollider:
   m_ObjectHideFlags: 1
