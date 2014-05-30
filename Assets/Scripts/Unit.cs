@@ -24,7 +24,12 @@ public class Unit : MonoBehaviour {
 
 		lastPosition = transform.position;
 		lastRotationAngle = transform.rotation.eulerAngles.y;
+	}
 
-		Debug.Log (lastRotationAngle);
+	void Update()
+	{
+		var text = GameObject.FindObjectOfType(typeof(GUIText)) as GUIText;
+
+		text.text = (movementRemaining - movementUsed).ToString();
 	}
 }

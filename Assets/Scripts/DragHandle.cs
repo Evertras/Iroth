@@ -25,7 +25,7 @@ public class DragHandle : MonoBehaviour {
 			parentUnit.lastRotationAngle = parentUnit.transform.rotation.eulerAngles.y;
 			parentUnit.currentRotationAngle = 0;
 
-			parentUnit.movementRemaining = parentUnit.movementRemaining + parentUnit.movementUsed;
+			parentUnit.movementRemaining = parentUnit.movementRemaining - parentUnit.movementUsed;
 			parentUnit.movementUsed = 0;
 		}
 
@@ -43,6 +43,20 @@ public class DragHandle : MonoBehaviour {
 				if (Vector3.Dot (transform.parent.position - parentUnit.lastPosition, parentUnit.transform.forward) < 0)
 				{
 					transform.parent.position = parentUnit.lastPosition;
+					parentUnit.movementUsed = 0;
+				}
+				else
+				{
+					parentUnit.movementUsed = (transform.parent.position - parentUnit.lastPosition).magnitude;
+
+					if (parentUnit.movementUsed > parentUnit.movementRemaining)
+					{
+						float dif = parentUnit.movementUsed - parentUnit.movementRemaining;
+
+						parentUnit.movementUsed = parentUnit.movementRemaining;
+
+						transform.parent.Translate (-dif * transform.parent.transform.forward);
+					}
 				}
 
 				break;
@@ -52,6 +66,12 @@ public class DragHandle : MonoBehaviour {
 				Vector3 center;
 				float angle;
 				bool isLeft = transform.localPosition.x < 0;
+				float maxAngle = parentUnit.movementRemaining * Mathf.Rad2Deg / (parentUnit.Files * 0.5f);
+
+				if (maxAngle > 180)
+				{
+					maxAngle = 180;
+				}
 
 				if (isLeft)
 				{
@@ -83,10 +103,10 @@ public class DragHandle : MonoBehaviour {
 						angle -= parentUnit.currentRotationAngle;
 						parentUnit.currentRotationAngle = 0;
 					}
-					else if (parentUnit.currentRotationAngle > 180)
+					else if (parentUnit.currentRotationAngle > maxAngle)
 					{
-						angle -= parentUnit.currentRotationAngle - 180;
-						parentUnit.currentRotationAngle = 180;
+						angle -= parentUnit.currentRotationAngle - maxAngle;
+						parentUnit.currentRotationAngle = maxAngle;
 					}
 				}
 				else
@@ -96,12 +116,14 @@ public class DragHandle : MonoBehaviour {
 						angle -= parentUnit.currentRotationAngle;
 						parentUnit.currentRotationAngle = 0;
 					}
-					else if (parentUnit.currentRotationAngle < -180)
+					else if (parentUnit.currentRotationAngle < -maxAngle)
 					{
-						angle -= parentUnit.currentRotationAngle - 180;
-						parentUnit.currentRotationAngle = -180;
+						angle -= parentUnit.currentRotationAngle - maxAngle;
+						parentUnit.currentRotationAngle = -maxAngle;
 					}
 				}
+
+				parentUnit.movementUsed = parentUnit.Files * Mathf.Deg2Rad * Mathf.Abs (parentUnit.currentRotationAngle) * 0.5f;
 
 				transform.parent.RotateAround(center, transform.up, angle);
 				break;
