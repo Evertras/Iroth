@@ -7,6 +7,9 @@ public class Unit : MonoBehaviour {
 	public int Files = 5;
 	public int Count = 10;
 
+	public GameObject movementTrailStraight;
+	public GameObject movementTrailCurved;
+
 	[HideInInspector]
 	public float maximumMovement;
 

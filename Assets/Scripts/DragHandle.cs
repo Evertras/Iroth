@@ -27,6 +27,16 @@ public class DragHandle : MonoBehaviour {
 
 			parentUnitMover.movementRemaining = parentUnitMover.movementRemaining - parentUnitMover.movementUsed;
 			parentUnitMover.movementUsed = 0;
+
+			if (behavior == DraggableBehavior.Forward)
+			{
+				var trailStraight = Instantiate (parentUnitMover.parentUnit.movementTrailStraight) as GameObject;
+
+				trailStraight.transform.parent = parentUnitMover.parentUnit.transform;
+			}
+			else
+			{
+			}
 		}
 
 		if (plane.Raycast(ray, out clickDistance))

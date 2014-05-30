@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class UnitMover : MonoBehaviour {
 	public GameObject leftCornerHandle;
@@ -24,6 +25,9 @@ public class UnitMover : MonoBehaviour {
 	[HideInInspector]
 	public DragHandle lastDragHandle;
 
+	[HideInInspector]
+	public GameObject currentMovementTrail;
+
 	void Start()
 	{
 		float cornerOffset = parentUnit.Files * 0.5f;
@@ -45,5 +49,16 @@ public class UnitMover : MonoBehaviour {
 
 		lastPosition = transform.position;
 		lastRotationAngle = transform.rotation.eulerAngles.y;
+
+		var trail = parentUnit.transform.Find ("MovementTrail");
+
+		List<GameObject> children = new List<GameObject> ();
+
+		foreach (Transform child in trail.transform)
+		{
+			children.Add(child.gameObject);
+		}
+
+		children.ForEach (c => Destroy (c));
 	}
 }
