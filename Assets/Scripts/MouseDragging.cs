@@ -2,24 +2,31 @@
 using System.Collections;
 
 public class MouseDragging : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-	
-	}
+	DragHandle selectedDragHandle = null;
 	
 	// Update is called once per frame
 	void Update () {
 		var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit hit;
 
-		if (Physics.Raycast (ray, out hit))
+		if (selectedDragHandle != null)
+		{
+			if (Input.GetMouseButton(0) == false)
+			{
+				selectedDragHandle = null;
+			}
+			else
+			{
+				selectedDragHandle.Drag (ray);
+			}
+		}
+		else if (Input.GetMouseButtonDown(0) && Physics.Raycast (ray, out hit))
 		{
 			if (hit.collider.gameObject.tag == "DragHandle")
 			{
-				Draggable draggable = hit.collider.gameObject.GetComponent<Draggable>();
+				selectedDragHandle = hit.collider.gameObject.GetComponent<DragHandle>();
 
-				draggable.Drag (ray);
+				selectedDragHandle.Drag (ray);
 			}
 		}
 	}

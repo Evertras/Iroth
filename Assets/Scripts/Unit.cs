@@ -4,6 +4,9 @@ using System.Collections;
 public class Unit : MonoBehaviour {
 	public int Files = 5;
 
+	public float MaximumMovement = 5;
+	public float MovementRemaining = 5;
+
 	void Start()
 	{
 		Transform leftCornerHandle = transform.FindChild ("LeftCornerHandle");
