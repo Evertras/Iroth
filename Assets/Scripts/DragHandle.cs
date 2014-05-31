@@ -10,6 +10,9 @@ public enum DraggableBehavior
 public class DragHandle : MonoBehaviour {
 	public DraggableBehavior behavior = DraggableBehavior.Forward;
 	public UnitMover parentUnitMover;
+	public GameObject movementTrailContainer;
+
+	private GameObject movementTrail;
 
 	public void Drag(Ray ray)
 	{
@@ -30,12 +33,30 @@ public class DragHandle : MonoBehaviour {
 
 			if (behavior == DraggableBehavior.Forward)
 			{
-				var trailStraight = Instantiate (parentUnitMover.parentUnit.movementTrailStraight) as GameObject;
+				movementTrail = Instantiate (parentUnitMover.parentUnit.movementTrailStraight) as GameObject;
 
-				trailStraight.transform.parent = parentUnitMover.parentUnit.transform;
+				movementTrail.transform.localPosition = parentUnitMover.transform.position;
+				movementTrail.transform.localRotation = parentUnitMover.transform.rotation;
+
+				movementTrail.transform.parent = movementTrailContainer.transform;
 			}
 			else
 			{
+				bool isLeft = transform.localPosition.x < 0;
+
+				movementTrail = Instantiate (parentUnitMover.parentUnit.movementTrailCurved) as GameObject;
+
+				var data = movementTrail.GetComponent<MovementTrailCurved>();
+
+				data.direction = isLeft ? CurveDirection.Left : CurveDirection.Right;
+				data.radius = parentUnitMover.parentUnit.Files * 0.5f;
+
+				movementTrail.transform.parent = movementTrailContainer.transform;
+
+				movementTrail.transform.localPosition = parentUnitMover.transform.localPosition;
+				movementTrail.transform.localRotation = parentUnitMover.transform.localRotation;
+
+				Debug.Log (movementTrail.transform.localPosition);
 			}
 		}
 
@@ -68,6 +89,8 @@ public class DragHandle : MonoBehaviour {
 						transform.parent.Translate (-dif * transform.parent.forward, Space.World);
 					}
 				}
+
+				movementTrail.transform.localScale = new Vector3(1, 1, parentUnitMover.movementUsed);
 
 				break;
 
@@ -136,6 +159,8 @@ public class DragHandle : MonoBehaviour {
 				parentUnitMover.movementUsed = parentUnitMover.parentUnit.Files * Mathf.Deg2Rad * Mathf.Abs (parentUnitMover.currentRotationAngle) * 0.5f;
 
 				transform.parent.RotateAround(center, transform.up, angle);
+
+				movementTrail.GetComponent<MovementTrailCurved>().SetDegrees(Mathf.Abs ((int)parentUnitMover.currentRotationAngle));
 				break;
 			}
 		}

@@ -60,5 +60,7 @@ public class UnitMover : MonoBehaviour {
 		}
 
 		children.ForEach (c => Destroy (c));
+
+		lastDragHandle = null;
 	}
 }
