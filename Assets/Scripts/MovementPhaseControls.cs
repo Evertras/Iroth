@@ -3,6 +3,7 @@ using System.Collections;
 
 public class MovementPhaseControls : MonoBehaviour {
 	DragHandle selectedDragHandle = null;
+	Unit selectedUnit = null;
 	
 	// Update is called once per frame
 	void Update () {
@@ -27,6 +28,17 @@ public class MovementPhaseControls : MonoBehaviour {
 				selectedDragHandle = hit.collider.gameObject.GetComponent<DragHandle>();
 				
 				selectedDragHandle.Drag (ray);
+			}
+			else if (hit.collider.tag == "Tray")
+			{
+				if (selectedUnit != null)
+				{
+					selectedUnit.SelectForMovement(false);
+				}
+
+				selectedUnit = hit.collider.transform.root.gameObject.GetComponent<Unit>();
+
+				selectedUnit.SelectForMovement(true);
 			}
 		}
 	}

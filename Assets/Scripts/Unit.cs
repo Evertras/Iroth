@@ -40,10 +40,10 @@ public class Unit : MonoBehaviour {
 		}
 	}
 
-	void SelectForMovement()
+	public void SelectForMovement(bool selected)
 	{
 		var handles = transform.Find ("UnitMover/MovementHandles").gameObject;
 
-		handles.SetActive (true);
+		handles.SetActive (selected);
 	}
 }
