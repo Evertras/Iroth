@@ -6,6 +6,7 @@ public class Unit : MonoBehaviour {
 
 	public int Files = 5;
 	public int Count = 10;
+	public bool Friendly = true;
 
 	public GameObject movementTrailStraight;
 	public GameObject movementTrailCurved;
@@ -37,5 +38,12 @@ public class Unit : MonoBehaviour {
 				obj.transform.localPosition = new Vector3(column - Files * 0.5f + 0.5f, obj.transform.localPosition.y, -row - 0.5f);
 			}
 		}
+	}
+
+	void SelectForMovement()
+	{
+		var handles = transform.Find ("UnitMover/MovementHandles").gameObject;
+
+		handles.SetActive (true);
 	}
 }

@@ -68,7 +68,7 @@ public class DragHandle : MonoBehaviour {
 			switch (behavior)
 			{
 			case DraggableBehavior.Forward:
-				Vector3 newOffset = Vector3.Project(clickPositionOnPlane - transform.position, transform.parent.transform.forward);
+				Vector3 newOffset = Vector3.Project(clickPositionOnPlane - transform.position, parentUnitMover.transform.forward);
 
 				float? maxDistance = null;
 				float magnitude = newOffset.magnitude;
@@ -106,16 +106,16 @@ public class DragHandle : MonoBehaviour {
 					}
 				}
 
-				transform.parent.Translate (newOffset, Space.World);
+				parentUnitMover.transform.Translate (newOffset, Space.World);
 
-				if (Vector3.Dot (transform.parent.position - parentUnitMover.lastPosition, parentUnitMover.transform.forward) < 0)
+				if (Vector3.Dot (parentUnitMover.transform.position - parentUnitMover.lastPosition, parentUnitMover.transform.forward) < 0)
 				{
-					transform.parent.position = parentUnitMover.lastPosition;
+					parentUnitMover.transform.position = parentUnitMover.lastPosition;
 					parentUnitMover.movementUsed = 0;
 				}
 				else
 				{
-					parentUnitMover.movementUsed = (transform.parent.position - parentUnitMover.lastPosition).magnitude;
+					parentUnitMover.movementUsed = (parentUnitMover.transform.position - parentUnitMover.lastPosition).magnitude;
 
 					if (parentUnitMover.movementUsed > parentUnitMover.movementRemaining)
 					{
@@ -123,7 +123,7 @@ public class DragHandle : MonoBehaviour {
 
 						parentUnitMover.movementUsed = parentUnitMover.movementRemaining;
 
-						transform.parent.Translate (-dif * transform.parent.forward, Space.World);
+						parentUnitMover.transform.Translate (-dif * parentUnitMover.transform.forward, Space.World);
 					}
 				}
 
@@ -145,11 +145,11 @@ public class DragHandle : MonoBehaviour {
 
 				if (isLeft)
 				{
-					center = transform.parent.TransformPoint (transform.localPosition + new Vector3(radius, 0, 0));
+					center = parentUnitMover.transform.TransformPoint (transform.localPosition + new Vector3(radius, 0, 0));
 				}
 				else
 				{
-					center = transform.parent.TransformPoint (transform.localPosition + new Vector3(-radius, 0, 0));
+					center = parentUnitMover.transform.TransformPoint (transform.localPosition + new Vector3(-radius, 0, 0));
 				}
 
 				Vector3 newVec = clickPositionOnPlane - center;
@@ -217,7 +217,7 @@ public class DragHandle : MonoBehaviour {
 
 				parentUnitMover.movementUsed = parentUnitMover.parentUnit.Files * Mathf.Deg2Rad * Mathf.Abs (parentUnitMover.currentRotationAngle) * 0.5f;
 
-				transform.parent.RotateAround(center, transform.up, angle);
+				parentUnitMover.transform.RotateAround(center, transform.up, angle);
 
 				movementTrail.GetComponent<MovementTrailCurved>().SetDegrees(Mathf.Abs ((int)parentUnitMover.currentRotationAngle));
 				break;
