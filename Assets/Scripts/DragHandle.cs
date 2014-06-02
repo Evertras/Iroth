@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Linq;
 
 public enum DraggableBehavior
 {
@@ -75,36 +76,32 @@ public class DragHandle : MonoBehaviour {
 
 				if (magnitude > 0 && Vector3.Dot (newOffset, parentUnitMover.transform.forward) > 0)
 				{
-					for (float offsetFromLeft = -radius; offsetFromLeft <= radius + float.Epsilon; offsetFromLeft += 0.25f)
+					Vector3 leftCorner = parentUnitMover.transform.position - parentUnitMover.transform.right * radius;
+					float step = magnitude * 0.1f;
+
+					if (step < 0.1f)
 					{
-						Vector3 origin = parentUnitMover.transform.position - parentUnitMover.transform.right * offsetFromLeft;
-						Ray testRay = new Ray(origin, transform.forward);
+						step = magnitude * 0.5f;
+					}
+					else if (step > 0.5f)
+					{
+						step = 0.5f;
+					}
 
-						RaycastHit hit;
+					for (float offsetFromFront = step; offsetFromFront <= magnitude; offsetFromFront += step)
+					{
+						Vector3 origin = leftCorner + parentUnitMover.transform.forward * offsetFromFront;
+						Ray testRay = new Ray(origin, parentUnitMover.transform.right);
 
-						if (Physics.Raycast(testRay, out hit, magnitude))
+						if (Physics.Raycast (testRay, radius * 2))
 						{
-							maxDistance = Mathf.Min (maxDistance ?? float.MaxValue, hit.distance);
+							maxDistance = offsetFromFront - step;
+							break;
 						}
 					}
 
 					if (maxDistance.HasValue)
 					{
-						Debug.LogWarning(maxDistance.Value);
-						Vector3 leftCorner = parentUnitMover.transform.position - parentUnitMover.transform.right * radius;
-
-						for (float offsetFromFront = 0.01f; offsetFromFront <= maxDistance.Value; offsetFromFront += maxDistance.Value * 0.1f)
-						{
-							Vector3 origin = leftCorner + parentUnitMover.transform.forward * offsetFromFront;
-							Ray testRay = new Ray(origin, parentUnitMover.transform.right);
-
-							if (Physics.Raycast (testRay, radius * 2))
-							{
-								maxDistance = offsetFromFront;
-								break;
-							}
-						}
-
 						newOffset = newOffset * (maxDistance.Value / magnitude);
 					}
 				}
@@ -165,6 +162,28 @@ public class DragHandle : MonoBehaviour {
 				if (cross.y < 0)
 				{
 					angle = -angle;
+				}
+
+				float degModifier = (isLeft ? -1.0f : 1.0f);
+
+				if ((degModifier < 0 && angle > 0) || (degModifier > 0 && angle < 0))
+				{
+					for (int degrees = 0; degrees < maxAngle; ++degrees)
+					{
+						Ray testRay = new Ray(center, Quaternion.AngleAxis (degrees * -degModifier, parentUnitMover.transform.up) * parentUnitMover.transform.right * degModifier);
+
+						var hits = Physics.RaycastAll (testRay, radius);
+
+						if (hits.Any (hit => !hit.collider.transform.IsChildOf(parentUnitMover.parentUnit.transform)))
+						{
+							if (Mathf.Abs (angle) > degrees)
+							{
+								angle = -degModifier * degrees;
+							}
+
+							break;
+						}
+					}
 				}
 
 				parentUnitMover.currentRotationAngle += angle;
