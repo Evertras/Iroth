@@ -168,11 +168,15 @@ public class DragHandle : MonoBehaviour {
 
 				if ((degModifier < 0 && angle > 0) || (degModifier > 0 && angle < 0))
 				{
+					Vector3 rayOrigin = center - Vector3.Project(transform.localPosition, transform.up);
+
 					for (int degrees = 0; degrees < maxAngle; ++degrees)
 					{
-						Ray testRay = new Ray(center, Quaternion.AngleAxis (degrees * -degModifier, parentUnitMover.transform.up) * parentUnitMover.transform.right * degModifier);
+						Ray testRay = new Ray(rayOrigin, Quaternion.AngleAxis (degrees * -degModifier, parentUnitMover.transform.up) * parentUnitMover.transform.right * degModifier);
 
 						var hits = Physics.RaycastAll (testRay, radius);
+
+						Debug.DrawLine (testRay.origin, testRay.GetPoint(radius));
 
 						if (hits.Any (hit => !hit.collider.transform.IsChildOf(parentUnitMover.parentUnit.transform)))
 						{
