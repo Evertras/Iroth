@@ -55,8 +55,6 @@ public class DragHandle : MonoBehaviour {
 
 				movementTrail.transform.localPosition = parentUnitMover.transform.localPosition;
 				movementTrail.transform.localRotation = parentUnitMover.transform.localRotation;
-
-				Debug.Log (movementTrail.transform.localPosition);
 			}
 		}
 
@@ -64,10 +62,52 @@ public class DragHandle : MonoBehaviour {
 		{
 			clickPositionOnPlane = ray.GetPoint (clickDistance);
 
+			float radius;
+
 			switch (behavior)
 			{
 			case DraggableBehavior.Forward:
 				Vector3 newOffset = Vector3.Project(clickPositionOnPlane - transform.position, transform.parent.transform.forward);
+
+				float? maxDistance = null;
+				float magnitude = newOffset.magnitude;
+				radius = parentUnitMover.parentUnit.Files * 0.5f;
+
+				if (magnitude > 0 && Vector3.Dot (newOffset, parentUnitMover.transform.forward) > 0)
+				{
+					for (float offsetFromLeft = -radius; offsetFromLeft <= radius + float.Epsilon; offsetFromLeft += 0.25f)
+					{
+						Vector3 origin = parentUnitMover.transform.position - parentUnitMover.transform.right * offsetFromLeft;
+						Ray testRay = new Ray(origin, transform.forward);
+
+						RaycastHit hit;
+
+						if (Physics.Raycast(testRay, out hit, magnitude))
+						{
+							maxDistance = Mathf.Min (maxDistance ?? float.MaxValue, hit.distance);
+						}
+					}
+
+					if (maxDistance.HasValue)
+					{
+						Debug.LogWarning(maxDistance.Value);
+						Vector3 leftCorner = parentUnitMover.transform.position - parentUnitMover.transform.right * radius;
+
+						for (float offsetFromFront = 0.01f; offsetFromFront <= maxDistance.Value; offsetFromFront += maxDistance.Value * 0.1f)
+						{
+							Vector3 origin = leftCorner + parentUnitMover.transform.forward * offsetFromFront;
+							Ray testRay = new Ray(origin, parentUnitMover.transform.right);
+
+							if (Physics.Raycast (testRay, radius * 2))
+							{
+								maxDistance = offsetFromFront;
+								break;
+							}
+						}
+
+						newOffset = newOffset * (maxDistance.Value / magnitude);
+					}
+				}
 
 				transform.parent.Translate (newOffset, Space.World);
 
@@ -95,7 +135,7 @@ public class DragHandle : MonoBehaviour {
 				break;
 
 			case DraggableBehavior.Wheel:
-				float radius = parentUnitMover.parentUnit.Files;
+				radius = parentUnitMover.parentUnit.Files;
 				Vector3 center;
 				float angle;
 				bool isLeft = transform.localPosition.x < 0;
