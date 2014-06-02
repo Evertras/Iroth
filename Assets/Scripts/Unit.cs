@@ -11,6 +11,9 @@ public class Unit : MonoBehaviour {
 	public GameObject movementTrailStraight;
 	public GameObject movementTrailCurved;
 
+	public Material friendlyUnitTrayMaterial;
+	public Material enemyUnitTrayMaterial;
+
 	[HideInInspector]
 	public float maximumMovement;
 
@@ -40,6 +43,10 @@ public class Unit : MonoBehaviour {
 				obj.transform.localPosition = new Vector3(column - Files * 0.5f + 0.5f, obj.transform.localPosition.y, -row - 0.5f);
 			}
 		}
+
+		var tray = transform.Find ("UnitMover/TrayContainer/Tray").gameObject;
+
+		tray.renderer.material = Friendly ? friendlyUnitTrayMaterial : enemyUnitTrayMaterial;
 	}
 
 	public void SelectForMovement(bool selected)
