@@ -21,24 +21,30 @@ public class MovementPhaseControls : MonoBehaviour {
 				selectedDragHandle.Drag (ray);
 			}
 		}
-		else if (Input.GetMouseButtonDown(0) && Physics.Raycast (ray, out hit))
+		else if (Input.GetMouseButtonDown(0))
 		{
-			if (hit.collider.gameObject.tag == "DragHandle")
+			bool foundHit = Physics.Raycast (ray, out hit);
+
+			if (foundHit && hit.collider.gameObject.tag == "DragHandle")
 			{
 				selectedDragHandle = hit.collider.gameObject.GetComponent<DragHandle>();
 				
 				selectedDragHandle.Drag (ray);
 			}
-			else if (hit.collider.tag == "Tray")
+			else
 			{
 				if (selectedUnit != null)
 				{
 					selectedUnit.SelectForMovement(false);
+					selectedUnit = null;
 				}
 
-				selectedUnit = hit.collider.transform.root.gameObject.GetComponent<Unit>();
+				if (foundHit && hit.collider.tag == "Tray")
+				{
+					selectedUnit = hit.collider.transform.root.gameObject.GetComponent<Unit>();
 
-				selectedUnit.SelectForMovement(true);
+					selectedUnit.SelectForMovement(true);
+				}
 			}
 		}
 	}
