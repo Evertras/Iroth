@@ -8,6 +8,8 @@ public class PhaseController : MonoBehaviour {
 		Move
 	}
 
+	public Phase currentPhase = Phase.Charge;
+
 	void Awake()
 	{
 		GameObject.Find ("GUIPhases").GetComponent<PhaseIconManager> ().ChangeTo (Phase.Charge);

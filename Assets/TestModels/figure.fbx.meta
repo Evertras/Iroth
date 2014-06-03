@@ -992,17 +992,20 @@ ModelImporter:
     2300004: Body_4
     2300006: Cylinder_2
     2300008: Sphere
+    2300010: //RootNode
     3300000: Body
     3300002: Body_3
     3300004: Body_4
     3300006: Cylinder_2
     3300008: Sphere
+    3300010: //RootNode
     4300000: Body
     4300002: Sphere
     4300004: Cylinder_2
     4300006: Body_3
     4300008: Body_4
     4300010: Subdivision_Surface_4
+    4300012: Subdivision_Surface
     7400000: C4D Animation Take
     9500000: //RootNode
     13700000: Subdivision_Surface_4
