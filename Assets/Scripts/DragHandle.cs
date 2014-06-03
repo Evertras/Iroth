@@ -77,31 +77,40 @@ public class DragHandle : MonoBehaviour {
 				if (magnitude > 0 && Vector3.Dot (newOffset, parentUnitMover.transform.forward) > 0)
 				{
 					Vector3 leftCorner = parentUnitMover.transform.position - parentUnitMover.transform.right * radius;
-					float step = magnitude * 0.1f;
+					float step = 0.1f;
 
-					if (step < 0.1f)
+					for (float offsetFromCorner = 0; offsetFromCorner < radius*2; offsetFromCorner += step)
 					{
-						step = magnitude * 0.5f;
-					}
-					else if (step > 0.5f)
-					{
-						step = 0.5f;
-					}
+						Vector3 origin = leftCorner + parentUnitMover.transform.right * offsetFromCorner;
 
-					for (float offsetFromFront = step; offsetFromFront <= magnitude; offsetFromFront += step)
-					{
-						Vector3 origin = leftCorner + parentUnitMover.transform.forward * offsetFromFront;
-						Ray testRay = new Ray(origin, parentUnitMover.transform.right);
+						Ray testRay = new Ray(origin, parentUnitMover.transform.forward);
 
-						if (Physics.Raycast (testRay, radius * 2))
+						RaycastHit hit;
+						
+						if (Physics.Raycast (testRay, out hit, magnitude))
 						{
-							maxDistance = offsetFromFront - step;
-							break;
+							maxDistance = Mathf.Min (maxDistance ?? float.MaxValue, hit.distance);
 						}
 					}
 
 					if (maxDistance.HasValue)
 					{
+						for (float offsetFromFront = step; offsetFromFront <= maxDistance.Value; offsetFromFront += step)
+						{
+							Vector3 origin = leftCorner + parentUnitMover.transform.forward * offsetFromFront;
+							Ray testRay = new Ray(origin, parentUnitMover.transform.right);
+
+							Debug.DrawLine (testRay.origin, testRay.GetPoint (radius*2));
+
+							bool foundHit = Physics.RaycastAll (testRay, radius * 2).Any (hit => !hit.collider.transform.IsChildOf(parentUnitMover.parentUnit.transform));
+
+							if (foundHit)
+							{
+								maxDistance = offsetFromFront - step;
+								break;
+							}
+						}
+
 						newOffset = newOffset * (maxDistance.Value / magnitude);
 					}
 				}
@@ -175,8 +184,6 @@ public class DragHandle : MonoBehaviour {
 						Ray testRay = new Ray(rayOrigin, Quaternion.AngleAxis (degrees * -degModifier, parentUnitMover.transform.up) * parentUnitMover.transform.right * degModifier);
 
 						var hits = Physics.RaycastAll (testRay, radius);
-
-						Debug.DrawLine (testRay.origin, testRay.GetPoint(radius));
 
 						if (hits.Any (hit => !hit.collider.transform.IsChildOf(parentUnitMover.parentUnit.transform)))
 						{
