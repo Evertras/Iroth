@@ -2,18 +2,20 @@
 using System.Collections;
 
 public class PhaseIconManager : MonoBehaviour {
+	GUITextureToggle lastPhase;
+
 	public void ChangeTo(PhaseController.Phase phase)
 	{
-		GUITexture target;
+		GUITextureToggle target;
 
 		switch (phase)
 		{
 			case PhaseController.Phase.Charge:
-				target = transform.Find ("PhaseCharge").guiTexture;
+				target = transform.Find ("PhaseCharge").GetComponent<GUITextureToggle>();
 				break;
 
 			case PhaseController.Phase.Move:
-				target = transform.Find ("PhaseMove").guiTexture;
+				target = transform.Find ("PhaseMove").GetComponent<GUITextureToggle>();
 				break;
 
 			default:
@@ -21,9 +23,13 @@ public class PhaseIconManager : MonoBehaviour {
 			break;
 		}
 
-		var bg = transform.Find ("PhaseBG");
+		if (lastPhase != null)
+		{
+			lastPhase.SetState (false);
+		}
 
-		bg.transform.localPosition = target.transform.localPosition;
-		bg.guiTexture.pixelInset = target.guiTexture.pixelInset;
+		lastPhase = target;
+
+		lastPhase.SetState (true);
 	}
 }
