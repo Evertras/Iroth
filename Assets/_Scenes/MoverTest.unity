@@ -427,6 +427,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 196065466}
   - 131: {fileID: 196065465}
+  - 114: {fileID: 196065467}
   m_Layer: 0
   m_Name: PhaseMove
   m_TagString: Untagged
@@ -445,7 +446,7 @@ GUITexture:
   m_Color: {r: .5, g: .5, b: .5, a: .5}
   m_PixelInset:
     serializedVersion: 2
-    x: 0
+    x: 150
     y: -110
     width: 100
     height: 100
@@ -460,11 +461,24 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 196065464}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: .5, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 1}
   m_Children: []
   m_Father: {fileID: 1571362169}
-  m_RootOrder: 2
+  m_RootOrder: 1
+--- !u!114 &196065467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 196065464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8419d9528ae7940bfe4feb799d61c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  off: {fileID: 2800000, guid: ba664eaed07cf4c4c8ad5402c24e6d2d, type: 3}
+  on: {fileID: 2800000, guid: 8ddb3dce3738cca46be19ea0ec73cf40, type: 3}
 --- !u!1 &219039441
 GameObject:
   m_ObjectHideFlags: 0
@@ -474,6 +488,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 219039442}
   - 131: {fileID: 219039443}
+  - 114: {fileID: 219039444}
   m_Layer: 0
   m_Name: PhaseCharge
   m_TagString: Untagged
@@ -512,6 +527,19 @@ GUITexture:
   m_RightBorder: 0
   m_TopBorder: 0
   m_BottomBorder: 0
+--- !u!114 &219039444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 219039441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8419d9528ae7940bfe4feb799d61c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  off: {fileID: 2800000, guid: faa45b1176283fd4f8dbac3dc9b56efa, type: 3}
+  on: {fileID: 2800000, guid: ccacbf18903104c4fbc4c5d2b98c53fd, type: 3}
 --- !u!1 &227470340
 GameObject:
   m_ObjectHideFlags: 0
@@ -554,7 +582,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f03dbffe3f18ac44b92622490559ca80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Model: {fileID: 100000, guid: dca0b0544b5d08c43ac0c225d67ec93a, type: 2}
+  Model: {fileID: 100982, guid: 601c2df9e2c5d5f40aa35373879b49e0, type: 2}
   Files: 5
   Count: 30
   Friendly: 1
@@ -991,7 +1019,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 863892562}
-  m_LocalRotation: {x: .224143878, y: .482962936, z: -.129409537, w: .836516321}
+  m_LocalRotation: {x: .365998179, y: .453153908, z: -.21130915, w: .784885585}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -1277,53 +1305,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!1 &1342039591
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 1342039592}
-  - 131: {fileID: 1342039593}
-  m_Layer: 0
-  m_Name: PhaseBG
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1342039592
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1342039591}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: .5, y: .5, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1571362169}
-  m_RootOrder: 1
---- !u!131 &1342039593
-GUITexture:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1342039591}
-  m_Enabled: 1
-  m_Texture: {fileID: 2800000, guid: 5e6c915b8cf7f144a8f673e4a98c2e0f, type: 3}
-  m_Color: {r: .5, g: .5, b: .5, a: .5}
-  m_PixelInset:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 110
-    height: 110
-  m_LeftBorder: 0
-  m_RightBorder: 0
-  m_TopBorder: 0
-  m_BottomBorder: 0
 --- !u!1 &1543226186
 GameObject:
   m_ObjectHideFlags: 0
@@ -1435,7 +1416,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 219039442}
-  - {fileID: 1342039592}
   - {fileID: 196065466}
   m_Father: {fileID: 0}
   m_RootOrder: 6

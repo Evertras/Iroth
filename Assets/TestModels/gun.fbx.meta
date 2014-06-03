@@ -1,9 +1,5 @@
 fileFormatVersion: 2
-<<<<<<< HEAD
 guid: e4aafcdc9b35f5c4b87d70572541b9b9
-=======
-guid: d724f0350deefcf49b67654c5dc5ed74
->>>>>>> c3fdc5d2072aad28fd9e4664f2735b4e4afce24e
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
@@ -166,7 +162,7 @@ ModelImporter:
 <<<<<<< HEAD
 =======
     motionNodeName: 
->>>>>>> c3fdc5d2072aad28fd9e4664f2735b4e4afce24e
+>>>>>>> 3069d54b8f12a956a50a23f5e4c90f6b0a2ed637
     animationCompression: 1
     animationRotationError: .5
     animationPositionError: .5
