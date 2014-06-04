@@ -8,7 +8,7 @@ public class MovementPhaseControls : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
-		if (gameObject.GetComponent<PhaseController> ().currentPhase == PhaseController.Phase.Move)
+		if (gameObject.GetComponent<PhaseController> ().currentPhase == PhaseController.Phase.Movement)
 		{
 			var ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 			RaycastHit hit;

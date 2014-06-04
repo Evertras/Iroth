@@ -10,11 +10,7 @@ public class PhaseIconManager : MonoBehaviour {
 
 		switch (phase)
 		{
-			case PhaseController.Phase.Charge:
-				target = transform.Find ("PhaseCharge").GetComponent<GUITextureToggle>();
-				break;
-
-			case PhaseController.Phase.Move:
+			case PhaseController.Phase.Movement:
 				target = transform.Find ("PhaseMove").GetComponent<GUITextureToggle>();
 				break;
 

@@ -4,14 +4,15 @@ using System.Collections;
 public class PhaseController : MonoBehaviour {
 	public enum Phase
 	{
-		Charge,
-		Move
+		Movement,
+		Shooting,
+		Combat
 	}
 
-	public Phase currentPhase = Phase.Charge;
+	public Phase currentPhase = Phase.Movement;
 
 	void Awake()
 	{
-		GameObject.Find ("GUIPhases").GetComponent<PhaseIconManager> ().ChangeTo (Phase.Charge);
+		GameObject.Find ("GUIPhases").GetComponent<PhaseIconManager> ().ChangeTo (Phase.Movement);
 	}
 }
