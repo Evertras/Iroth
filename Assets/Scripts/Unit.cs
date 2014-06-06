@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class Unit : MonoBehaviour {
 	public enum Side
@@ -23,6 +23,9 @@ public class Unit : MonoBehaviour {
 
 	[HideInInspector]
 	public float maximumMovement;
+
+	[HideInInspector]
+	public float lingeringDamage = 0;
 
 	private ModelStats modelStats;
 
@@ -69,7 +72,7 @@ public class Unit : MonoBehaviour {
 
 	public float GetTotalDamageInCombat(Side sideAttackingInto)
 	{
-		int attacks = Mathf.Min (Files * 2, Count);
+		int attacks = Mathf.Min (Files * 4, Count);
 		float hits = attacks * (0.5f + 0.1f * modelStats.finesse);
 		float modifier = 1;
 
@@ -82,6 +85,49 @@ public class Unit : MonoBehaviour {
 			modifier = 2;
 		}
 
-		return hits * modelStats.strength;
+		return hits * modelStats.strength * modifier;
+	}
+
+	public void Damage(float damage)
+	{
+		if (modelStats.toughness <= 0)
+		{
+			throw new UnityException("Toughness must be >= 0");
+		}
+
+		lingeringDamage += damage;
+		var modelContainer = transform.Find ("Models");
+
+		int numToDestroy = 0;
+
+		while (lingeringDamage > modelStats.toughness)
+		{
+			lingeringDamage -= modelStats.toughness;
+
+			++numToDestroy;
+		}
+
+		if (numToDestroy < Count)
+		{
+			List<GameObject> toDestroy = new List<GameObject> ();
+
+			for (int i = 0; i < numToDestroy; ++i)
+			{
+				toDestroy.Add (modelContainer.GetChild (modelContainer.childCount - 1 - i).gameObject);
+			}
+
+			foreach (var obj in toDestroy)
+			{
+				Destroy (obj);
+			}
+
+			Count -= numToDestroy;
+
+			Debug.Log (Count);
+		}
+		else
+		{
+			// TODO: Destroy the unit
+		}
 	}
 }

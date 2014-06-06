@@ -400,6 +400,14 @@ Prefab:
       propertyPath: m_RootOrder
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 65eb8056e0c67c740a0131e1cdb5eb22, type: 2}
+      propertyPath: phaseController
+      value: 
+      objectReference: {fileID: 244015237}
+    - target: {fileID: 11400000, guid: 65eb8056e0c67c740a0131e1cdb5eb22, type: 2}
+      propertyPath: combatController
+      value: 
+      objectReference: {fileID: 244015240}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 65eb8056e0c67c740a0131e1cdb5eb22, type: 2}
   m_RootGameObject: {fileID: 474558953}
@@ -522,6 +530,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85cb0ce61987f304a8ca1b408d0e574e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  phaseController: {fileID: 244015237}
+  combatController: {fileID: 244015240}
 --- !u!131 &474558955
 GUITexture:
   m_ObjectHideFlags: 0
@@ -1002,7 +1012,7 @@ GameObject:
   - 4: {fileID: 998218661}
   - 114: {fileID: 998218662}
   m_Layer: 0
-  m_Name: TestUnit
+  m_Name: EnemyUnit
   m_TagString: Unit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1047,6 +1057,7 @@ MonoBehaviour:
   enemyUnitTrayMaterial: {fileID: 2100000, guid: 6f52097b90ae9cc479167478ead5decd,
     type: 2}
   maximumMovement: 5
+  lingeringDamage: 0
 --- !u!1 &1020391542
 GameObject:
   m_ObjectHideFlags: 0
@@ -1372,6 +1383,7 @@ MonoBehaviour:
   enemyUnitTrayMaterial: {fileID: 2100000, guid: 6f52097b90ae9cc479167478ead5decd,
     type: 2}
   maximumMovement: 5
+  lingeringDamage: 0
 --- !u!1 &1313090543
 GameObject:
   m_ObjectHideFlags: 0
@@ -1846,6 +1858,10 @@ Prefab:
     - target: {fileID: 400016, guid: eef7849c55b29b34dac15092d5b43d9a, type: 2}
       propertyPath: m_RootMapOrder
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 100016, guid: eef7849c55b29b34dac15092d5b43d9a, type: 2}
+      propertyPath: m_Name
+      value: EnemyUnit
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: eef7849c55b29b34dac15092d5b43d9a, type: 2}
