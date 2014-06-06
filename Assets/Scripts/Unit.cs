@@ -2,6 +2,13 @@
 using System.Collections;
 
 public class Unit : MonoBehaviour {
+	public enum Side
+	{
+		Frontal,
+		Flank,
+		Rear
+	}
+
 	public GameObject Model;
 
 	public int Files = 5;
@@ -17,6 +24,8 @@ public class Unit : MonoBehaviour {
 	[HideInInspector]
 	public float maximumMovement;
 
+	private ModelStats modelStats;
+
 	public int Ranks
 	{
 		get
@@ -29,7 +38,9 @@ public class Unit : MonoBehaviour {
 	{
 		int ranks = Ranks;
 
-		maximumMovement = Model.GetComponent<ModelStats> ().movement * 5;
+		modelStats = Model.GetComponent<ModelStats> ();
+
+		maximumMovement = modelStats.movement * 5;
 
 		var modelContainer = transform.Find ("Models");
 
@@ -54,5 +65,23 @@ public class Unit : MonoBehaviour {
 		var handles = transform.Find ("UnitMover/MovementHandles").gameObject;
 
 		handles.SetActive (selected);
+	}
+
+	public float GetTotalDamageInCombat(Side sideAttackingInto)
+	{
+		int attacks = Mathf.Min (Files * 2, Count);
+		float hits = attacks * (0.5f + 0.1f * modelStats.finesse);
+		float modifier = 1;
+
+		if (sideAttackingInto == Side.Flank)
+		{
+			modifier = 1.5f;
+		}
+		else if (sideAttackingInto == Side.Rear)
+		{
+			modifier = 2;
+		}
+
+		return hits * modelStats.strength;
 	}
 }

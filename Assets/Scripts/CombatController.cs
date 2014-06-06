@@ -1,15 +1,30 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 public class CombatController : MonoBehaviour {
+	private class Combat
+	{
+		IEnumerable<Unit> playerUnits;
+		IEnumerable<Unit> enemyUnits;
 
-	// Use this for initialization
-	void Start () {
-	
+		public Combat(IEnumerable<Unit> playerUnits, IEnumerable<Unit>enemyUnits)
+		{
+			this.playerUnits = playerUnits;
+			this.enemyUnits = enemyUnits;
+		}
+
+		public void Run()
+		{
+		}
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+
+	public void Start()
+	{
+		// For testing purposes we're going to start with just assuming everyone's in combat with each other
+		var units = GameObject.FindGameObjectsWithTag ("Unit");
+
+		var playerUnits = units.Where (u => u.GetComponent<Unit> ().Friendly);
+		var enemyUnits = units.Where (u => !u.GetComponent<Unit> ().Friendly);
 	}
 }
