@@ -13,6 +13,6 @@ public class PhaseController : MonoBehaviour {
 
 	void Awake()
 	{
-		GameObject.Find ("GUIPhases").GetComponent<PhaseIconManager> ().ChangeTo (Phase.Movement);
+		GameObject.Find ("GUIPhases").GetComponent<PhaseIconManager> ().ChangeTo (currentPhase);
 	}
 }

@@ -9,9 +9,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 400000}
   - 131: {fileID: 13100000}
-  - 114: {fileID: 11400000}
   m_Layer: 0
-  m_Name: PhaseMove
+  m_Name: PhaseIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25,7 +24,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400002}
-  - 114: {fileID: 11400002}
+  - 114: {fileID: 11400000}
   m_Layer: 0
   m_Name: GUIPhases
   m_TagString: Untagged
@@ -63,25 +62,15 @@ MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8419d9528ae7940bfe4feb799d61c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  off: {fileID: 2800000, guid: ba664eaed07cf4c4c8ad5402c24e6d2d, type: 3}
-  on: {fileID: 2800000, guid: 8ddb3dce3738cca46be19ea0ec73cf40, type: 3}
---- !u!114 &11400002
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 79d790763a0792248b7a03c3a0ce5715, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  movementIcon: {fileID: 2800000, guid: 2446a561ce96b1d4f8b3d37f945710e1, type: 3}
+  shootingIcon: {fileID: 2800000, guid: af0af541b6bbf364daab8da2e18d297c, type: 3}
+  combatIcon: {fileID: 2800000, guid: 9d1f3dc76ca2e064fb73621428af8fda, type: 3}
 --- !u!131 &13100000
 GUITexture:
   m_ObjectHideFlags: 1
@@ -89,7 +78,7 @@ GUITexture:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
-  m_Texture: {fileID: 2800000, guid: ba664eaed07cf4c4c8ad5402c24e6d2d, type: 3}
+  m_Texture: {fileID: 2800000, guid: 2446a561ce96b1d4f8b3d37f945710e1, type: 3}
   m_Color: {r: .5, g: .5, b: .5, a: .5}
   m_PixelInset:
     serializedVersion: 2
