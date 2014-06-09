@@ -118,12 +118,10 @@ public class Unit : MonoBehaviour {
 
 			foreach (var obj in toDestroy)
 			{
-				Destroy (obj);
+				obj.GetComponent<Killable>().Kill ();
 			}
 
 			Count -= numToDestroy;
-
-			Debug.Log (Count);
 		}
 		else
 		{
