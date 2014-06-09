@@ -9,6 +9,14 @@ public class Unit : MonoBehaviour {
 		Rear
 	}
 
+	public enum MovementMode
+	{
+		Unselected,
+		March,
+		Regroup,
+		Charge
+	}
+
 	public GameObject Model;
 
 	public int Files = 5;
@@ -29,6 +37,9 @@ public class Unit : MonoBehaviour {
 
 	[HideInInspector]
 	public float lingeringDamage = 0;
+
+	[HideInInspector]
+	public MovementMode movementMode = MovementMode.Unselected;
 
 	private ModelStats modelStats;
 
@@ -68,9 +79,18 @@ public class Unit : MonoBehaviour {
 
 	public void SelectForMovement(bool selected)
 	{
-		var handles = transform.Find ("UnitMover/MovementHandles").gameObject;
+		switch (movementMode)
+		{
+		case MovementMode.Unselected:
+			var modeSelectors = transform.Find ("MovementModeSelectors").gameObject;
+			modeSelectors.SetActive(selected);
+			break;
 
-		handles.SetActive (selected);
+		case MovementMode.March:
+			var handles = transform.Find ("UnitMover/MovementHandles").gameObject;
+			handles.SetActive (selected);
+			break;
+		}
 	}
 
 	public float GetTotalDamageInCombat(Side sideAttackingInto)

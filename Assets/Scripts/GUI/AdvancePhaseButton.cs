@@ -14,6 +14,8 @@ public class AdvancePhaseButton : MonoBehaviour {
 
 			foreach (var unit in units)
 			{
+				unit.GetComponent<Unit>().movementMode = Unit.MovementMode.Unselected;
+
 				var unitMover = unit.GetComponentsInChildren<UnitMover>()[0];
 
 				Vector3 posDif = unitMover.transform.position - unit.transform.position;
