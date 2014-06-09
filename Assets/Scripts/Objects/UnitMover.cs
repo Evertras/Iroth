@@ -62,5 +62,9 @@ public class UnitMover : MonoBehaviour {
 		children.ForEach (c => Destroy (c));
 
 		lastDragHandle = null;
+
+		var dragHandles = transform.Find ("MovementHandles").gameObject;
+
+		dragHandles.SetActive (false);
 	}
 }
