@@ -15,6 +15,9 @@ public class Unit : MonoBehaviour {
 	public int Count = 10;
 	public bool Friendly = true;
 
+	public delegate void CountChangedAction ();
+	public event CountChangedAction CountChanged;
+
 	public GameObject movementTrailStraight;
 	public GameObject movementTrailCurved;
 
@@ -122,6 +125,11 @@ public class Unit : MonoBehaviour {
 			}
 
 			Count -= numToDestroy;
+
+			if (CountChanged != null)
+			{
+				CountChanged();
+			}
 		}
 		else
 		{
