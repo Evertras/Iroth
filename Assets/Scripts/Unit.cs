@@ -79,6 +79,8 @@ public class Unit : MonoBehaviour {
 
 	public void SelectForMovement(bool selected)
 	{
+		GameObject cancelButton;
+
 		switch (movementMode)
 		{
 		case MovementMode.Unselected:
@@ -90,7 +92,15 @@ public class Unit : MonoBehaviour {
 			var handles = transform.Find ("UnitMover/MovementHandles").gameObject;
 			handles.SetActive (selected);
 
-			var cancelButton = transform.Find ("UnitMover/CancelContainer").gameObject;
+			cancelButton = transform.Find ("UnitMover/CancelContainer").gameObject;
+			cancelButton.SetActive (selected);
+			break;
+
+		case MovementMode.Charge:
+			var selectParticles = transform.Find ("UnitMover/TrayContainer/SelectedParticles").gameObject;
+			selectParticles.SetActive(selected);
+
+			cancelButton = transform.Find ("UnitMover/CancelContainer").gameObject;
 			cancelButton.SetActive (selected);
 			break;
 		}
