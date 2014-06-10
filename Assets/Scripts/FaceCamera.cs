@@ -5,10 +5,10 @@ public class FaceCamera : MonoBehaviour {
 
 	void Awake()
 	{
-		Update ();
+		LateUpdate ();
 	}
 	
-	void Update () {
+	void LateUpdate () {
 		transform.LookAt (Camera.main.transform.position);
 	}
 }

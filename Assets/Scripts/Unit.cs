@@ -89,6 +89,9 @@ public class Unit : MonoBehaviour {
 		case MovementMode.March:
 			var handles = transform.Find ("UnitMover/MovementHandles").gameObject;
 			handles.SetActive (selected);
+
+			var cancelButton = transform.Find ("UnitMover/CancelContainer").gameObject;
+			cancelButton.SetActive (selected);
 			break;
 		}
 	}
@@ -155,5 +158,19 @@ public class Unit : MonoBehaviour {
 		{
 			// TODO: Destroy the unit
 		}
+	}
+
+	public void CancelMovement()
+	{
+		var unitMoverObject = transform.Find ("UnitMover").gameObject;
+
+		SelectForMovement(false);
+
+		unitMoverObject.transform.localPosition = Vector3.zero;
+		unitMoverObject.transform.localRotation = Quaternion.identity;
+
+		unitMoverObject.GetComponent<UnitMover> ().ResetMovement ();
+
+		movementMode = Unit.MovementMode.Unselected;
 	}
 }

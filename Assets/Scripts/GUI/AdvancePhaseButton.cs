@@ -14,6 +14,7 @@ public class AdvancePhaseButton : MonoBehaviour {
 
 			foreach (var unit in units)
 			{
+				unit.GetComponent<Unit>().SelectForMovement(false);
 				unit.GetComponent<Unit>().movementMode = Unit.MovementMode.Unselected;
 
 				var unitMover = unit.GetComponentsInChildren<UnitMover>()[0];

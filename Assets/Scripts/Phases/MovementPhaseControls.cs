@@ -34,6 +34,12 @@ public class MovementPhaseControls : MonoBehaviour {
 
 					selectedMode.Activate();
 				}
+				else if (foundHit && hit.collider.gameObject.tag == "CancelMovement")
+				{
+					var selectedUnit = hit.collider.transform.root.GetComponent<Unit>();
+
+					selectedUnit.CancelMovement();
+				}
 				else 
 				{
 					if (selectedUnit != null) {

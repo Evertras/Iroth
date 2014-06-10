@@ -38,10 +38,6 @@ public class UnitMover : MonoBehaviour {
 		ResetMovement ();
 	}
 
-	void Update()
-	{
-	}
-
 	public void ResetMovement()
 	{
 		movementUsed = 0;
