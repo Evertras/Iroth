@@ -130,7 +130,6 @@ public class AIPathfinder : MonoBehaviour
                     AIDataNode node = m_DataNodes.First.Value;
                     m_DataNodes.RemoveFirst();
                     m_ClosedList.AddLast(node);
-                    Debug.Log("M_F = " + node.m_F.ToString());
 
                     Vector3 unitForward = node.m_Forward;
                     Vector3 unitSide = Vector3.Cross(Vector3.up, unitForward).normalized;
@@ -236,7 +235,6 @@ public class AIPathfinder : MonoBehaviour
         }
         if (Physics.SphereCast(tr, m_ColliderRadius, tl - tr, out hitObj, halfwidth * 2.0f))
         {
-            Debug.Log(hitObj.transform.tag + " hit at count of " + m_DataNodes.Count.ToString());
             if (hitObj.transform.tag == "Obstacle")
             {
                 add = false;
