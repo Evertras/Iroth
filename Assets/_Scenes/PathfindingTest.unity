@@ -833,7 +833,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 753096389}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.17833328, y: 0, z: 17.9756432}
+  m_LocalPosition: {x: 9.95608139, y: 0, z: 17.9756432}
   m_LocalScale: {x: 13.8589334, y: 13.8589344, z: 13.8589344}
   m_Children: []
   m_Father: {fileID: 0}
@@ -998,6 +998,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85cb0ce61987f304a8ca1b408d0e574e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  phaseController: {fileID: 0}
+  combatController: {fileID: 0}
 --- !u!131 &1212763199
 GUITexture:
   m_ObjectHideFlags: 0
@@ -1006,14 +1008,14 @@ GUITexture:
   m_PrefabInternal: {fileID: 2145359458}
   m_GameObject: {fileID: 1212763197}
   m_Enabled: 1
-  m_Texture: {fileID: 2800000, guid: dda9622cca29fef48a48304b3a606237, type: 3}
+  m_Texture: {fileID: 2800000, guid: 6f3f52b688436b441bb85566165f952d, type: 3}
   m_Color: {r: .5, g: .5, b: .5, a: .5}
   m_PixelInset:
     serializedVersion: 2
-    x: -64
-    y: -29
-    width: 50
-    height: 50
+    x: -74
+    y: 10
+    width: 64
+    height: 64
   m_LeftBorder: 0
   m_RightBorder: 0
   m_TopBorder: 0
@@ -1025,7 +1027,7 @@ Transform:
   m_PrefabInternal: {fileID: 2145359458}
   m_GameObject: {fileID: 1212763197}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: .899999976, y: .100000001, z: 0}
+  m_LocalPosition: {x: 1, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1139,6 +1141,8 @@ MonoBehaviour:
   enemyUnitTrayMaterial: {fileID: 2100000, guid: 6f52097b90ae9cc479167478ead5decd,
     type: 2}
   maximumMovement: 5
+  lingeringDamage: 0
+  movementMode: 0
 --- !u!4 &1398504063
 Transform:
   m_ObjectHideFlags: 0
@@ -1360,7 +1364,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1560488526}
-  - 114: {fileID: 1560488525}
+  - 114: {fileID: 1943545472}
   m_Layer: 0
   m_Name: GUIPhases
   m_TagString: Untagged
@@ -1368,18 +1372,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1560488525
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400002, guid: ac5670f73b19b3a4ab5ced5f05865b8d,
-    type: 2}
-  m_PrefabInternal: {fileID: 321400106}
-  m_GameObject: {fileID: 1560488524}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79d790763a0792248b7a03c3a0ce5715, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1560488526
 Transform:
   m_ObjectHideFlags: 0
@@ -1701,9 +1693,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 1943545471}
   - 131: {fileID: 1943545473}
-  - 114: {fileID: 1943545472}
   m_Layer: 0
-  m_Name: PhaseMove
+  m_Name: PhaseIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1727,14 +1718,15 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 11400000, guid: ac5670f73b19b3a4ab5ced5f05865b8d,
     type: 2}
   m_PrefabInternal: {fileID: 321400106}
-  m_GameObject: {fileID: 1943545470}
+  m_GameObject: {fileID: 1560488524}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8419d9528ae7940bfe4feb799d61c7, type: 3}
+  m_Script: {fileID: 11500000, guid: 79d790763a0792248b7a03c3a0ce5715, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  off: {fileID: 2800000, guid: ba664eaed07cf4c4c8ad5402c24e6d2d, type: 3}
-  on: {fileID: 2800000, guid: 8ddb3dce3738cca46be19ea0ec73cf40, type: 3}
+  movementIcon: {fileID: 2800000, guid: 2446a561ce96b1d4f8b3d37f945710e1, type: 3}
+  shootingIcon: {fileID: 2800000, guid: af0af541b6bbf364daab8da2e18d297c, type: 3}
+  combatIcon: {fileID: 2800000, guid: 9d1f3dc76ca2e064fb73621428af8fda, type: 3}
 --- !u!131 &1943545473
 GUITexture:
   m_ObjectHideFlags: 0
@@ -1743,7 +1735,7 @@ GUITexture:
   m_PrefabInternal: {fileID: 321400106}
   m_GameObject: {fileID: 1943545470}
   m_Enabled: 1
-  m_Texture: {fileID: 2800000, guid: ba664eaed07cf4c4c8ad5402c24e6d2d, type: 3}
+  m_Texture: {fileID: 2800000, guid: 2446a561ce96b1d4f8b3d37f945710e1, type: 3}
   m_Color: {r: .5, g: .5, b: .5, a: .5}
   m_PixelInset:
     serializedVersion: 2

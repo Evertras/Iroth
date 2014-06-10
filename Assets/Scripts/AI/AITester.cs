@@ -21,9 +21,9 @@ public class AITester : MonoBehaviour
                 m_Pather.m_Target = GameObject.Find("TestTarget");
             }
         }
-        else if(Input.GetKeyUp(KeyCode.B))
+        else if(Input.GetKey(KeyCode.B))
         {
-            m_Pather.setRunFromMovement();
+            m_Pather.Step();
         }
     }
 }

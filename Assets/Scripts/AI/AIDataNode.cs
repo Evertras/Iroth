@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public enum MoveType
 {
@@ -7,7 +8,7 @@ public enum MoveType
     RotateCounterClockwise,
     MoveForward,
 }
-public class AIDataNode : IComparer
+public class AIDataNode
 {
     public MoveType m_MoveType;
 
@@ -19,35 +20,85 @@ public class AIDataNode : IComparer
 
     public Vector3 m_Position;
     public Vector3 m_Forward;
-    public float m_CurrentAngle;
+    public float m_CurrentAngleRad;
 
-    public int Compare(object a, object b)
+    public float m_F;
+
+    public void CalcFCost()
     {
-        AIDataNode objA = (AIDataNode)a;
-        AIDataNode objB = (AIDataNode)b;
+        m_F = m_DistanceToGoal + m_CostSoFar;
+    }
+    private class sortAIDataHelper : IComparer<AIDataNode>
+    {
+        int IComparer<AIDataNode>.Compare(AIDataNode a, AIDataNode b)
+        {
+            AIDataNode objA = (AIDataNode)a;
+            AIDataNode objB = (AIDataNode)b;
 
-        if (objA.m_DistanceToGoal < objB.m_DistanceToGoal)
-        {
-            return -1;
-        }
-        else if (objA.m_DistanceToGoal > objB.m_DistanceToGoal)
-        {
-            return 1;
-        }
-        else
-        {
-            if (objA.m_CostSoFar < objB.m_CostSoFar)
+            int parentA = 0;
+            AIDataNode temp = objA.m_Parent;
+            while(temp != null)
+            {
+                parentA++;
+                temp = temp.m_Parent;
+            }
+            int parentB = 0;
+            temp = objB.m_Parent;
+            while (temp != null)
+            {
+                parentB++;
+                temp = temp.m_Parent;
+            }
+            if(parentA < parentB)
             {
                 return -1;
             }
-            else if (objA.m_CostSoFar > objB.m_CostSoFar)
+            else if (parentA > parentB)
             {
                 return 1;
             }
             else
             {
-                return 0;
+                if (objA.m_F > objB.m_F)
+                {
+                    return -1;
+                }
+                else if (objA.m_F < objB.m_F)
+                {
+                    return 1;
+                }
+                else
+                {
+                    if (objA.m_DistanceToGoal < objB.m_DistanceToGoal)
+                    {
+                        return -1;
+                    }
+                    else if (objA.m_DistanceToGoal > objB.m_DistanceToGoal)
+                    {
+                        return 1;
+                    }
+                    else
+                    {
+                        if (objA.m_CostSoFar < objB.m_CostSoFar)
+                        {
+                            return -1;
+                        }
+                        else if (objA.m_CostSoFar > objB.m_CostSoFar)
+                        {
+                            return 1;
+                        }
+                        else
+                        {
+                            return 0;
+                        }
+                    }
+                }
             }
         }
+    }
+
+    public static IComparer<AIDataNode> GetComparer()
+    {
+        return (IComparer<AIDataNode>)new sortAIDataHelper();
     }
 }
