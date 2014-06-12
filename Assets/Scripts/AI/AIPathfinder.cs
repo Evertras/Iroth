@@ -37,12 +37,70 @@ public class AIPathfinder : MonoBehaviour
     public void HitTarget(AIDataNode endPoint)
     {
         m_Path = endPoint;
+        m_PathList = GetPath();
+    }
+
+    List<AIDataNode> m_PathList;
+    int m_CleanIndex = 0;
+    AIDataNode pathShorterStart = null, pathShorterEnd = null;
+    int optCorner = 0;
+    public void CleanPath()
+    {
+        AIDataNode node = m_PathList[m_CleanIndex];
+
+        UnitMover unitMover = m_Unit.GetComponentInChildren<UnitMover>();
+        float halfwidth = unitMover.parentUnit.Files * 0.5f;
+        Vector3 colliderOffset = new Vector3(0.0f, m_ColliderHeight) - node.m_Forward * 0.5f;
+        Vector3 right = Vector3.Cross(Vector3.up, node.m_Forward).normalized;
+        Vector3 tl = node.m_Position - right * halfwidth + colliderOffset;
+        Vector3 tr = node.m_Position + right * halfwidth + colliderOffset;
+
+        float maxValidDistance = 0.0f;
+        AIDataNode validNode = null;
+        int hitCorner = -1;
+        for(int i = m_CleanIndex + 1; i < m_PathList.Count; ++i)
+        {
+            AIDataNode checkNode = m_PathList[i];
+            Vector3 cright = Vector3.Cross(Vector3.up, checkNode.m_Forward).normalized;
+            Vector3 ctl = checkNode.m_Position - right * halfwidth + colliderOffset;
+            Vector3 ctr = checkNode.m_Position + right * halfwidth + colliderOffset;
+
+            float checkDistance = Vector3.Distance(node.m_Position, checkNode.m_Position);
+            RaycastHit hitObj;
+            if (Physics.SphereCast(node.m_Position, m_ColliderRadius, checkNode.m_Position - node.m_Position, out hitObj, checkDistance))
+            {
+                //Debug.Log(hitObj.collider.tag + " was hit pos when trying to optimize path " + i.ToString());
+                hitCorner = 0;
+                break;
+            }
+            else if (Physics.SphereCast(tr, m_ColliderRadius, ctr - tr, out hitObj, checkDistance))
+            {
+                //Debug.Log(hitObj.collider.tag + " was hit tr when trying to optimize path " + i.ToString());
+                hitCorner = 1;
+                break;
+            }
+            else if (Physics.SphereCast(tl, m_ColliderRadius, ctl - tl, out hitObj, checkDistance))
+            {
+                //Debug.Log(hitObj.collider.tag + " was hit tl when trying to optimize path " + i.ToString());
+                hitCorner = 2;
+                break;
+            }
+            else
+            {
+                validNode = checkNode;
+                maxValidDistance = checkDistance;
+            }
+        }
+        Debug.Log("Hit corner = " + hitCorner.ToString());
+        pathShorterStart = node;
+        pathShorterEnd = validNode;
+        optCorner = hitCorner;
     }
 
     public List<AIDataNode> GetPath()
     {
         List<AIDataNode> list = new List<AIDataNode>();
-
+        list.Reverse();
         AIDataNode node = m_Path;
         while (node != null)
         {
@@ -50,6 +108,7 @@ public class AIPathfinder : MonoBehaviour
             node = node.m_Parent;
         }
 
+        list.Reverse();
         return list;
     }
 
@@ -95,6 +154,7 @@ public class AIPathfinder : MonoBehaviour
                     HitTarget(newNode);
                     return true;
                 }
+                //Debug.Log("WTF " + check.ToString());
 
                 //check if a turn CCW is possible
                 float curAngle = unitMover.currentRotationAngle;
@@ -276,17 +336,18 @@ public class AIPathfinder : MonoBehaviour
     int AddForward(Vector3 pos, Vector3 forward, float halfwidth)
     {
         Vector3 right = Vector3.Cross(Vector3.up, forward).normalized;
-        Vector3 colliderOffset = new Vector3(0.0f, m_ColliderHeight) + forward * 0.5f;
+        Vector3 colliderOffset = new Vector3(0.0f, m_ColliderHeight) - forward * 0.5f;
         Vector3 tl = pos - right * halfwidth + colliderOffset;
         Vector3 tr = pos + right * halfwidth + colliderOffset;
 
         bool add = true;
         RaycastHit hitObj;
-        if (Physics.CheckSphere(tl, m_ColliderRadius))
+        int hitLayer = 1 << 9;
+        if (Physics.CheckSphere(tl, m_ColliderRadius, ~hitLayer))
         {
             add = false;
         }
-        if (Physics.CheckSphere(tr, m_ColliderRadius))
+        if (Physics.CheckSphere(tr, m_ColliderRadius, ~hitLayer))
         {
             add = false;
         }
@@ -325,7 +386,7 @@ public class AIPathfinder : MonoBehaviour
 
         newPos = pos + posChange;
 
-        Vector3 colliderOffset = new Vector3(0.0f, m_ColliderHeight) + newForward * 0.5f;
+        Vector3 colliderOffset = new Vector3(0.0f, m_ColliderHeight) - newForward * 0.5f;
         Vector3 tl = newPos - newRight * halfwidth + colliderOffset;
         Vector3 tr = newPos + newRight * halfwidth + colliderOffset;
 
@@ -340,6 +401,13 @@ public class AIPathfinder : MonoBehaviour
             add = false;
         }
         if (Physics.SphereCast(tl, m_ColliderRadius, tr - tl, out hitObj, halfwidth * 2.0f))
+        {
+            if (hitObj.transform.tag == "Obstacle")
+            {
+                add = false;
+            }
+        }
+        if (Physics.SphereCast(tr, m_ColliderRadius, tl - tr, out hitObj, halfwidth * 2.0f))
         {
             if (hitObj.transform.tag == "Obstacle")
             {
@@ -366,7 +434,7 @@ public class AIPathfinder : MonoBehaviour
 
         newPos = pos + posChange;
 
-        Vector3 colliderOffset = new Vector3(0.0f, m_ColliderHeight) + newForward * 0.5f;
+        Vector3 colliderOffset = new Vector3(0.0f, m_ColliderHeight) - newForward * 0.5f;
         Vector3 tl = newPos - newRight * halfwidth + colliderOffset;
         Vector3 tr = newPos + newRight * halfwidth + colliderOffset;
 
@@ -381,6 +449,13 @@ public class AIPathfinder : MonoBehaviour
             add = false;
         }
         if (Physics.SphereCast(tr, m_ColliderRadius, tl - tr, out hitObj, halfwidth * 2.0f))
+        {
+            if (hitObj.transform.tag == "Obstacle")
+            {
+                add = false;
+            }
+        }
+        if (Physics.SphereCast(tl, m_ColliderRadius, tr - tl, out hitObj, halfwidth * 2.0f))
         {
             if (hitObj.transform.tag == "Obstacle")
             {
@@ -415,6 +490,38 @@ public class AIPathfinder : MonoBehaviour
 
     void OnDrawGizmos()
     {
+        if(pathShorterStart != null && pathShorterEnd != null)
+        {
+            UnitMover unitMover = m_Unit.GetComponentInChildren<UnitMover>();
+            float halfwidth = unitMover.parentUnit.Files * 0.5f;
+            Vector3 sunitRight = Vector3.Cross(pathShorterStart.m_Forward, Vector3.up).normalized;
+            Vector3 scolliderOffset = new Vector3(0.0f, m_ColliderHeight) + pathShorterStart.m_Forward * -0.5f;
+            Vector3 stl = pathShorterStart.m_Position + (pathShorterStart.m_Forward * m_BaseMove) - sunitRight * halfwidth + scolliderOffset;
+            Vector3 str = pathShorterStart.m_Position + (pathShorterStart.m_Forward * m_BaseMove) + sunitRight * halfwidth + scolliderOffset;
+            Vector3 eunitRight = Vector3.Cross(pathShorterEnd.m_Forward, Vector3.up).normalized;
+            Vector3 ecolliderOffset = new Vector3(0.0f, m_ColliderHeight) + pathShorterEnd.m_Forward * -0.5f;
+            Vector3 etl = pathShorterEnd.m_Position + (pathShorterEnd.m_Forward * m_BaseMove) - eunitRight * halfwidth + ecolliderOffset;
+            Vector3 etr = pathShorterEnd.m_Position + (pathShorterEnd.m_Forward * m_BaseMove) + eunitRight * halfwidth + ecolliderOffset;
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(stl, etl);
+            Gizmos.DrawLine(str, etr);
+            Gizmos.DrawLine(pathShorterStart.m_Position, pathShorterEnd.m_Position);
+
+            Vector3 angle = Vector3.zero;
+            if(optCorner == 2)
+            {
+                angle = (etr - str).normalized;
+                float angleRad = Mathf.Atan2(angle.z, angle.x) - Mathf.PI * 0.5f;
+                Gizmos.DrawLine(str, str + new Vector3(Mathf.Cos(angleRad), 0.0f, Mathf.Sin(angleRad)) * 10.0f);
+            }
+            else if(optCorner == 1)
+            {
+                angle = (etl - stl).normalized;
+                float angleRad = Mathf.Atan2(angle.z, angle.x) - Mathf.PI * 0.5f;
+                Gizmos.DrawLine(stl, stl + new Vector3(Mathf.Cos(angleRad), 0.0f, Mathf.Sin(angleRad)) * 10.0f);
+            }
+
+        }
         int count = 0;
         if (m_DataNodes.Count > 0)
         {
@@ -434,8 +541,7 @@ public class AIPathfinder : MonoBehaviour
                     else
                         Gizmos.color = Color.clear;
                     UnitMover unitMover = m_Unit.GetComponentInChildren<UnitMover>();
-                    float ratio = 1 - (1 / (unitMover.parentUnit.Files - 1.5f));
-                    float halfwidth = unitMover.parentUnit.Files * 0.5f * -ratio;
+                    float halfwidth = unitMover.parentUnit.Files * 0.5f;
                     Vector3 unitRight = Vector3.Cross(node.m_Forward, Vector3.up).normalized;
                     Vector3 colliderOffset = new Vector3(0.0f, m_ColliderHeight) + node.m_Forward * -0.5f;
                     Vector3 tl = node.m_Position + (node.m_Forward * node.m_MoveAmount) - unitRight * halfwidth + colliderOffset;
@@ -459,8 +565,7 @@ public class AIPathfinder : MonoBehaviour
                     else
                         Gizmos.color = Color.clear;
                     UnitMover unitMover = m_Unit.GetComponentInChildren<UnitMover>();
-                    float ratio = 1 - (1 / (unitMover.parentUnit.Files - 1.5f));
-                    float halfwidth = unitMover.parentUnit.Files * 0.5f * -ratio;
+                    float halfwidth = unitMover.parentUnit.Files * 0.5f;
                     Vector3 unitRight = Vector3.Cross(node.m_Forward, Vector3.up).normalized;
                     Vector3 colliderOffset = new Vector3(0.0f, m_ColliderHeight) + node.m_Forward * -0.5f;
                     Vector3 tl = node.m_Position - unitRight * halfwidth + colliderOffset;

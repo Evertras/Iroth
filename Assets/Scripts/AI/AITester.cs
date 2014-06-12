@@ -23,12 +23,16 @@ public class AITester : MonoBehaviour
                 m_Pather.m_Target = GameObject.Find("TestTarget");
             }
         }
-        else if(Input.GetKey(KeyCode.B))
+        else if (Input.GetKey(KeyCode.B) && m_Path.Count == 0)
         {
             if(m_Pather.Step())
             {
                 m_Path = m_Pather.GetPath();
             }
+        }
+        else if(Input.GetKeyUp(KeyCode.C))
+        {
+            m_Pather.CleanPath();
         }
     }
 
