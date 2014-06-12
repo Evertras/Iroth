@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class AITester : MonoBehaviour
 {
     public GameObject m_AIPather;
     GameObject m_Tester;
     AIPathfinder m_Pather;
+    List<AIDataNode> m_Path = new List<AIDataNode>();
     // Update is called once per frame
     void Update()
     {
@@ -23,7 +25,25 @@ public class AITester : MonoBehaviour
         }
         else if(Input.GetKey(KeyCode.B))
         {
-            m_Pather.Step();
+            if(m_Pather.Step())
+            {
+                m_Path = m_Pather.GetPath();
+            }
+        }
+    }
+
+    void OnDrawGizmos()
+    {
+        if(m_Path.Count > 0)
+        {
+            Gizmos.color = Color.cyan;
+            foreach(AIDataNode node in m_Path)
+            {
+                if(node.m_Parent != null)
+                {
+                    Gizmos.DrawLine(node.m_Position, node.m_Parent.m_Position);
+                }
+            }
         }
     }
 }

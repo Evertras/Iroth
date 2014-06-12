@@ -34,7 +34,26 @@ public class AIPathfinder : MonoBehaviour
         m_Run = unitMover.parentUnit.maximumMovement;
     }
 
-    public void Step()
+    public void HitTarget(AIDataNode endPoint)
+    {
+        m_Path = endPoint;
+    }
+
+    public List<AIDataNode> GetPath()
+    {
+        List<AIDataNode> list = new List<AIDataNode>();
+
+        AIDataNode node = m_Path;
+        while (node != null)
+        {
+            list.Add(node);
+            node = node.m_Parent;
+        }
+
+        return list;
+    }
+
+    public bool Step()
     {
         if (m_Target != null && m_Unit != null)
         {
@@ -45,12 +64,14 @@ public class AIPathfinder : MonoBehaviour
                 Vector3 unitForward = m_Unit.transform.forward;
                 Vector3 unitSide = m_Unit.transform.right;
                 Vector3 unitPos = unitMover.parentUnit.transform.position;
+                AIDataNode newNode = new AIDataNode();
 
                 //attempt move forward
 
-                if (AddForward(unitPos, unitForward, halfwidth))
+                int check = AddForward(unitPos, unitForward, halfwidth);
+                if (check >= 1)
                 {
-                    AIDataNode newNode = new AIDataNode();
+                    newNode = new AIDataNode();
                     newNode.m_MoveType = MoveType.MoveForward;
                     newNode.m_CostSoFar = m_BaseMove;
                     newNode.m_Parent = null;
@@ -69,15 +90,21 @@ public class AIPathfinder : MonoBehaviour
                     if (shouldAdd)
                         m_DataNodes.AddFirst(newNode);
                 }
+                if(check == 2)
+                {
+                    HitTarget(newNode);
+                    return true;
+                }
 
                 //check if a turn CCW is possible
                 float curAngle = unitMover.currentRotationAngle;
 
                 Vector3 newPos, newForward;
                 float nextAngle;
-                if (AddCounterClockwise(unitPos, unitSide, halfwidth, curAngle, out newPos, out newForward, out nextAngle))
+                check = AddCounterClockwise(unitPos, unitSide, halfwidth, curAngle, out newPos, out newForward, out nextAngle);
+                if (check >= 1)
                 {
-                    AIDataNode newNode = new AIDataNode();
+                    newNode = new AIDataNode();
                     newNode.m_MoveType = MoveType.RotateCounterClockwise;
                     newNode.m_CostSoFar = (m_BaseRotate * Mathf.Rad2Deg) / 18.0f;
                     newNode.m_Parent = null;
@@ -96,11 +123,17 @@ public class AIPathfinder : MonoBehaviour
                     if(shouldAdd)
                         m_DataNodes.AddFirst(newNode);
                 }
+                if (check == 2)
+                {
+                    HitTarget(newNode);
+                    return true;
+                }
 
                 //check if a turn CW is possible
-                if (AddClockwise(unitPos, unitSide, halfwidth, curAngle, out newPos, out newForward, out nextAngle))
+                check = AddClockwise(unitPos, unitSide, halfwidth, curAngle, out newPos, out newForward, out nextAngle);
+                if (check >= 1)
                 {
-                    AIDataNode newNode = new AIDataNode();
+                    newNode = new AIDataNode();
                     newNode.m_MoveType = MoveType.RotateClockwise;
                     newNode.m_CostSoFar = (m_BaseRotate * Mathf.Rad2Deg) / 18.0f;
                     newNode.m_Parent = null;
@@ -119,11 +152,17 @@ public class AIPathfinder : MonoBehaviour
                     if (shouldAdd)
                         m_DataNodes.AddFirst(newNode);
                 }
+                if (check == 2)
+                {
+                    HitTarget(newNode);
+                    return true;
+                }
             }
             else
             {
                 List<AIDataNode> newList = new List<AIDataNode>();
                 int count = 0;
+                AIDataNode newNode = new AIDataNode();
                 while(m_DataNodes.Count > 0 && count < m_CountPerStep)
                 {
                     count++;
@@ -135,9 +174,10 @@ public class AIPathfinder : MonoBehaviour
                     Vector3 unitSide = Vector3.Cross(Vector3.up, unitForward).normalized;
                     Vector3 unitPos = node.m_Position;
 
-                    if (AddForward(unitPos, unitForward, halfwidth))
+                    int check = AddForward(unitPos, unitForward, halfwidth);
+                    if (check >= 1)
                     {
-                        AIDataNode newNode = new AIDataNode();
+                        newNode = new AIDataNode();
                         newNode.m_MoveType = MoveType.MoveForward;
                         newNode.m_CostSoFar = node.m_CostSoFar + m_BaseMove;
                         newNode.m_Parent = node;
@@ -156,15 +196,20 @@ public class AIPathfinder : MonoBehaviour
                         if (shouldAdd)
                             newList.Add(newNode);
                     }
+                    if (check == 2)
+                    {
+                        HitTarget(newNode);
+                        return true;
+                    }
 
                     float curAngle = node.m_CurrentAngleRad;
 
                     Vector3 newPos, newForward;
                     float nextAngle;
-
-                    if (AddCounterClockwise(unitPos, unitSide, halfwidth, curAngle, out newPos, out newForward, out nextAngle))
+                    check = AddCounterClockwise(unitPos, unitSide, halfwidth, curAngle, out newPos, out newForward, out nextAngle);
+                    if (check >= 1)
                     {
-                        AIDataNode newNode = new AIDataNode();
+                        newNode = new AIDataNode();
                         newNode.m_MoveType = MoveType.RotateCounterClockwise;
                         newNode.m_CostSoFar = node.m_CostSoFar + (m_BaseRotate * Mathf.Rad2Deg) / 18.0f;
                         newNode.m_Parent = node;
@@ -183,11 +228,17 @@ public class AIPathfinder : MonoBehaviour
                         if (shouldAdd)
                             newList.Add(newNode);
                     }
+                    if (check == 2)
+                    {
+                        HitTarget(newNode);
+                        return true;
+                    }
 
                     //check if a turn CW is possible
-                    if (AddClockwise(unitPos, unitSide, halfwidth, curAngle, out newPos, out newForward, out nextAngle))
+                    check = AddClockwise(unitPos, unitSide, halfwidth, curAngle, out newPos, out newForward, out nextAngle);
+                    if (check >= 1)
                     {
-                        AIDataNode newNode = new AIDataNode();
+                        newNode = new AIDataNode();
                         newNode.m_MoveType = MoveType.RotateClockwise;
                         newNode.m_CostSoFar = node.m_CostSoFar + (m_BaseRotate * Mathf.Rad2Deg) / 18.0f;
                         newNode.m_Parent = node;
@@ -206,6 +257,11 @@ public class AIPathfinder : MonoBehaviour
                         if (shouldAdd)
                             newList.Add(newNode);
                     }
+                    if (check == 2)
+                    {
+                        HitTarget(newNode);
+                        return true;
+                    }
                 }
                 foreach(AIDataNode node in newList)
                 {
@@ -214,9 +270,10 @@ public class AIPathfinder : MonoBehaviour
                 SortDataNodes();
             }
         }
+        return false;
     }
 
-    bool AddForward(Vector3 pos, Vector3 forward, float halfwidth)
+    int AddForward(Vector3 pos, Vector3 forward, float halfwidth)
     {
         Vector3 right = Vector3.Cross(Vector3.up, forward).normalized;
         Vector3 colliderOffset = new Vector3(0.0f, m_ColliderHeight) + forward * 0.5f;
@@ -247,11 +304,16 @@ public class AIPathfinder : MonoBehaviour
                 add = false;
             }
         }
+        if (Physics.CheckSphere(tl, m_ColliderRadius, 1 << 8) || Physics.CheckSphere(tr, m_ColliderRadius, 1 << 8) ||
+            Physics.CheckSphere(pos, m_ColliderRadius, 1 << 8))
+        {
+            return 2;
+        }
 
-        return add;
+        return add ? 1 : 0;
     }
 
-    bool AddCounterClockwise(Vector3 pos, Vector3 right, float halfwidth, float curAngle, out Vector3 newPos, out Vector3 newForward, out float nextAngle)
+    int AddCounterClockwise(Vector3 pos, Vector3 right, float halfwidth, float curAngle, out Vector3 newPos, out Vector3 newForward, out float nextAngle)
     {
         float current = curAngle;
         nextAngle = current + m_BaseRotate;
@@ -284,10 +346,15 @@ public class AIPathfinder : MonoBehaviour
                 add = false;
             }
         }
+        if (Physics.CheckSphere(tl, m_ColliderRadius, 1 << 8) || Physics.CheckSphere(tr, m_ColliderRadius, 1 << 8) ||
+            Physics.CheckSphere(pos, m_ColliderRadius, 1 << 8))
+        {
+            return 2;
+        }
 
-        return add;
+        return add ? 1 : 0;
     }
-    bool AddClockwise(Vector3 pos, Vector3 right, float halfwidth, float curAngle, out Vector3 newPos, out Vector3 newForward, out float nextAngle)
+    int AddClockwise(Vector3 pos, Vector3 right, float halfwidth, float curAngle, out Vector3 newPos, out Vector3 newForward, out float nextAngle)
     {
         float current = curAngle;
         nextAngle = current - m_BaseRotate;
@@ -320,8 +387,13 @@ public class AIPathfinder : MonoBehaviour
                 add = false;
             }
         }
+        if (Physics.CheckSphere(tl, m_ColliderRadius, 1 << 8) || Physics.CheckSphere(tr, m_ColliderRadius, 1 << 8) ||
+            Physics.CheckSphere(pos, m_ColliderRadius, 1 << 8))
+        {
+            return 2;
+        }
 
-        return add;
+        return add ? 1 : 0;
     }
 
     void SortDataNodes()
