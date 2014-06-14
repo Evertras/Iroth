@@ -58,12 +58,13 @@ public class AIPathfinder : MonoBehaviour
         float maxValidDistance = 0.0f;
         AIDataNode validNode = null;
         int hitCorner = -1;
+        Vector3 ctl = Vector3.zero, ctr = Vector3.zero;
         for(int i = m_CleanIndex + 1; i < m_PathList.Count; ++i)
         {
             AIDataNode checkNode = m_PathList[i];
             Vector3 cright = Vector3.Cross(Vector3.up, checkNode.m_Forward).normalized;
-            Vector3 ctl = checkNode.m_Position - right * halfwidth + colliderOffset;
-            Vector3 ctr = checkNode.m_Position + right * halfwidth + colliderOffset;
+            ctl = checkNode.m_Position - right * halfwidth + colliderOffset;
+            ctr = checkNode.m_Position + right * halfwidth + colliderOffset;
 
             float checkDistance = Vector3.Distance(node.m_Position, checkNode.m_Position);
             RaycastHit hitObj;
@@ -95,6 +96,98 @@ public class AIPathfinder : MonoBehaviour
         pathShorterStart = node;
         pathShorterEnd = validNode;
         optCorner = hitCorner;
+
+        if (optCorner == 1)
+        {
+            Vector3 angle = (ctl - tl).normalized;
+            float angleRad = Mathf.Atan2(angle.z, angle.x) - Mathf.PI * 0.5f;
+            // calc start turn node vals
+            Vector3 newRight = (new Vector3(Mathf.Cos(angleRad), 0.0f, Mathf.Sin(angleRad))).normalized;
+            Vector3 posChange = (node.m_Position + right * halfwidth) - (node.m_Position + newRight * halfwidth);
+            // create start turn node
+            AIDataNode startTurn = new AIDataNode();
+            startTurn.m_CostSoFar = node.m_CostSoFar + Mathf.Abs(angleRad) * Mathf.Rad2Deg;
+            startTurn.m_CurrentAngleRad = angleRad;
+            startTurn.m_Position = node.m_Position + posChange;
+            startTurn.m_DistanceToGoal = Vector3.Distance(startTurn.m_Position, m_Target.transform.position);
+            startTurn.m_Forward = Vector3.Cross(newRight, Vector3.up).normalized;
+            startTurn.m_MoveType = (angleRad < 0.0f? MoveType.RotateClockwise : MoveType.RotateCounterClockwise);
+            startTurn.m_Parent = node;                            // link parent of start turn node to be node
+            startTurn.CalcFCost();
+            // create straight path node
+            AIDataNode straight = new AIDataNode();
+            straight.m_CostSoFar = startTurn.m_CostSoFar + Vector3.Distance(ctl, tl);
+            straight.m_CurrentAngleRad = startTurn.m_CurrentAngleRad;
+            straight.m_Position = startTurn.m_Position + (ctl - tl);
+            straight.m_DistanceToGoal = Vector3.Distance(straight.m_Position, m_Target.transform.position);
+            straight.m_MoveAmount = Vector3.Distance(ctl, tl);
+            straight.m_Forward = startTurn.m_Forward;
+            straight.m_MoveType = MoveType.MoveForward;
+            straight.m_Parent = startTurn;                         // link parent of straight path node to be start turn node
+            straight.CalcFCost();
+            // calc end turn vals
+            angleRad = validNode.m_CurrentAngleRad - straight.m_CurrentAngleRad;
+            newRight = (new Vector3(Mathf.Cos(angleRad), 0.0f, Mathf.Sin(angleRad))).normalized;
+            posChange = (straight.m_Position + right * halfwidth) - (straight.m_Position + newRight * halfwidth);
+            // create end turn node
+            AIDataNode endTurn = new AIDataNode();
+            endTurn.m_CostSoFar = straight.m_CostSoFar + Mathf.Abs(angleRad) * Mathf.Rad2Deg;
+            endTurn.m_CurrentAngleRad = angleRad;
+            endTurn.m_Position = straight.m_Position + posChange;
+            endTurn.m_DistanceToGoal = Vector3.Distance(endTurn.m_Position, m_Target.transform.position);
+            endTurn.m_Forward = Vector3.Cross(newRight, Vector3.up).normalized;
+            endTurn.m_MoveType = (angleRad < 0.0f ? MoveType.RotateClockwise : MoveType.RotateCounterClockwise);
+            endTurn.m_Parent = straight;                                // link parent of end turn node to be straight path node
+            endTurn.CalcFCost();
+            // link parent of valid node to be end turn node
+            validNode.m_Parent = endTurn;
+        }
+        else if (optCorner == 2)
+        {
+            Vector3 angle = (ctr - tr).normalized;
+            float angleRad = Mathf.Atan2(angle.z, angle.x) - Mathf.PI * 0.5f;
+            // calc start turn node vals
+            Vector3 newRight = (new Vector3(Mathf.Cos(angleRad), 0.0f, Mathf.Sin(angleRad))).normalized;
+            Vector3 posChange = (node.m_Position + right * halfwidth) - (node.m_Position + newRight * halfwidth);
+            // create start turn node
+            AIDataNode startTurn = new AIDataNode();
+            startTurn.m_CostSoFar = node.m_CostSoFar + Mathf.Abs(angleRad) * Mathf.Rad2Deg;
+            startTurn.m_CurrentAngleRad = angleRad;
+            startTurn.m_Position = node.m_Position + posChange;
+            startTurn.m_DistanceToGoal = Vector3.Distance(startTurn.m_Position, m_Target.transform.position);
+            startTurn.m_Forward = Vector3.Cross(newRight, Vector3.up).normalized;
+            startTurn.m_MoveType = (angleRad < 0.0f ? MoveType.RotateClockwise : MoveType.RotateCounterClockwise);
+            startTurn.m_Parent = node;                            // link parent of start turn node to be node
+            startTurn.CalcFCost();
+            // create straight path node
+            AIDataNode straight = new AIDataNode();
+            straight.m_CostSoFar = startTurn.m_CostSoFar + Vector3.Distance(ctl, tl);
+            straight.m_CurrentAngleRad = startTurn.m_CurrentAngleRad;
+            straight.m_Position = startTurn.m_Position + (ctr - tr);
+            straight.m_DistanceToGoal = Vector3.Distance(straight.m_Position, m_Target.transform.position);
+            straight.m_MoveAmount = Vector3.Distance(ctl, tl);
+            straight.m_Forward = startTurn.m_Forward;
+            straight.m_MoveType = MoveType.MoveForward;
+            straight.m_Parent = startTurn;                         // link parent of straight path node to be start turn node
+            straight.CalcFCost();
+            // calc end turn vals
+            angleRad = validNode.m_CurrentAngleRad - straight.m_CurrentAngleRad;
+            newRight = (new Vector3(Mathf.Cos(angleRad), 0.0f, Mathf.Sin(angleRad))).normalized;
+            posChange = (straight.m_Position + right * halfwidth) - (straight.m_Position + newRight * halfwidth);
+            // create end turn node
+            AIDataNode endTurn = new AIDataNode();
+            endTurn.m_CostSoFar = straight.m_CostSoFar + Mathf.Abs(angleRad) * Mathf.Rad2Deg;
+            endTurn.m_CurrentAngleRad = angleRad;
+            endTurn.m_Position = straight.m_Position + posChange;
+            endTurn.m_DistanceToGoal = Vector3.Distance(endTurn.m_Position, m_Target.transform.position);
+            endTurn.m_Forward = Vector3.Cross(newRight, Vector3.up).normalized;
+            endTurn.m_MoveType = (angleRad < 0.0f ? MoveType.RotateClockwise : MoveType.RotateCounterClockwise);
+            endTurn.m_Parent = straight;                                // link parent of end turn node to be straight path node
+            endTurn.CalcFCost();
+            // link parent of valid node to be end turn node
+            validNode.m_Parent = endTurn;
+        }
+        m_PathList = GetPath();
     }
 
     public List<AIDataNode> GetPath()

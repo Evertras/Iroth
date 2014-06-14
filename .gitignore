@@ -12,3 +12,6 @@
 /*.pidb
 /*.booproj
 Assets/TestModels/figure.bak.meta
+ProjectSettings/GraphicsSettings.asset
+*.asset
+ProjectSettings/GraphicsSettings.asset
