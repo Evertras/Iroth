@@ -18,7 +18,7 @@ public class LoSArc : MonoBehaviour {
 	private Transform rightSection;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		int width = 1;
 
 		switch (side)
@@ -57,7 +57,7 @@ public class LoSArc : MonoBehaviour {
 	void Update () {
 	}
 
-	void SetLength(float length)
+	public void SetLength(float length)
 	{
 		var middleScale = middleSection.localScale;
 		var middlePos = middleSection.localPosition;

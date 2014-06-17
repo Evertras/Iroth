@@ -32,6 +32,8 @@ public class Unit : MonoBehaviour {
 	public Material friendlyUnitTrayMaterial;
 	public Material enemyUnitTrayMaterial;
 
+	public LoSArcContainer losArcContainer;
+
 	[HideInInspector]
 	public float maximumMovement;
 
@@ -97,8 +99,18 @@ public class Unit : MonoBehaviour {
 			break;
 
 		case MovementMode.Charge:
+			/*
 			var selectParticles = transform.Find ("UnitMover/TrayContainer/SelectedParticles").gameObject;
 			selectParticles.SetActive(selected);
+			*/
+			if (selected)
+			{
+				losArcContainer.Show(LoSArc.Direction.Front, maximumMovement);
+			}
+			else
+			{
+				losArcContainer.HideAll ();
+			}
 
 			cancelButton = transform.Find ("UnitMover/CancelContainer").gameObject;
 			cancelButton.SetActive (selected);
