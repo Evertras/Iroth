@@ -55,10 +55,9 @@ public class LoSArc : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		Extend ((Mathf.Sin (Time.fixedTime + (int)side) + 1) * 5);
 	}
 
-	void Extend(float length)
+	void SetLength(float length)
 	{
 		var middleScale = middleSection.localScale;
 		var middlePos = middleSection.localPosition;
