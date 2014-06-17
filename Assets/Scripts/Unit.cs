@@ -105,7 +105,7 @@ public class Unit : MonoBehaviour {
 			*/
 			if (selected)
 			{
-				losArcContainer.Show(LoSArc.Direction.Front, maximumMovement);
+				losArcContainer.Show(LoSArc.Direction.Front, maximumMovement * 1.5f);
 			}
 			else
 			{
