@@ -119,6 +119,21 @@ public class Unit : MonoBehaviour {
 		}
 	}
 
+	public bool Charge(Unit enemy)
+	{
+		if (Friendly ^ enemy.Friendly)
+		{
+			// Figure out if the enemy is in our arc
+			// TODO: this is bad and wrong and bad and bad and wrong and also bad
+			Vector3 toEnemy = enemy.transform.position - transform.position;
+			float angle = Vector3.Angle (transform.forward, toEnemy);
+
+			Debug.Log (angle);
+		}
+
+		return false;
+	}
+
 	public float GetTotalDamageInCombat(Side sideAttackingInto)
 	{
 		int attacks = Mathf.Min (Files * 4, Count);

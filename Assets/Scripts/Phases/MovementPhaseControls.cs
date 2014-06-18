@@ -42,19 +42,35 @@ public class MovementPhaseControls : MonoBehaviour {
 				}
 				else 
 				{
-					if (selectedUnit != null)
-					{
-						selectedUnit.SelectForMovement (false);
-						selectedUnit = null;
-					}
-
 					if (foundHit && hit.collider.tag == "Tray")
 					{
-						selectedUnit = hit.collider.transform.root.gameObject.GetComponent<Unit> ();
+						var collidedUnit = hit.collider.transform.root.gameObject.GetComponent<Unit> ();
 
-						if (selectedUnit.Friendly)
+						if (collidedUnit.Friendly)
 						{
+							if (selectedUnit != null)
+							{
+								selectedUnit.SelectForMovement (false);
+								selectedUnit = null;
+							}
+
+							selectedUnit = collidedUnit;
 							selectedUnit.SelectForMovement (true);
+						}
+						else if (selectedUnit != null && selectedUnit.movementMode == Unit.MovementMode.Charge && !collidedUnit.Friendly)
+						{
+							selectedUnit.Charge (collidedUnit);
+
+							selectedUnit.SelectForMovement(false);
+							selectedUnit = null;
+						}
+					}
+					else
+					{
+						if (selectedUnit != null)
+						{
+							selectedUnit.SelectForMovement (false);
+							selectedUnit = null;
 						}
 					}
 				}
