@@ -42,15 +42,20 @@ public class MovementPhaseControls : MonoBehaviour {
 				}
 				else 
 				{
-					if (selectedUnit != null) {
-							selectedUnit.SelectForMovement (false);
-							selectedUnit = null;
+					if (selectedUnit != null)
+					{
+						selectedUnit.SelectForMovement (false);
+						selectedUnit = null;
 					}
 
-					if (foundHit && hit.collider.tag == "Tray") {
-							selectedUnit = hit.collider.transform.root.gameObject.GetComponent<Unit> ();
+					if (foundHit && hit.collider.tag == "Tray")
+					{
+						selectedUnit = hit.collider.transform.root.gameObject.GetComponent<Unit> ();
 
+						if (selectedUnit.Friendly)
+						{
 							selectedUnit.SelectForMovement (true);
+						}
 					}
 				}
 			}
