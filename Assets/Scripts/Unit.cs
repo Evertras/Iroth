@@ -71,6 +71,7 @@ public class Unit : MonoBehaviour {
 
 				obj.transform.parent = modelContainer;
 				obj.transform.localPosition = new Vector3(column - Files * 0.5f + 0.5f, obj.transform.localPosition.y, -row - 0.5f);
+				obj.transform.localRotation = Quaternion.identity;
 			}
 		}
 
